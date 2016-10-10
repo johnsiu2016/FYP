@@ -12,8 +12,17 @@
  */
 
 import React from 'react';
+import Helmet from 'react-helmet';
 
 import styles from './styles.css';
+
+
+// material-ui theme
+import darkBaseTheme from 'material-ui/styles/baseThemes/darkBaseTheme';
+import MuiThemeProvider from 'material-ui/styles/MuiThemeProvider';
+import getMuiTheme from 'material-ui/styles/getMuiTheme';
+import AppBar from 'material-ui/AppBar';
+// material-ui theme end
 
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
@@ -23,9 +32,20 @@ export default class App extends React.Component { // eslint-disable-line react/
 
   render() {
     return (
-      <div className={styles.container}>
-        {React.Children.toArray(this.props.children)}
-      </div>
+      <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
+        <div className={styles.container}>
+          <Helmet
+            titleTemplate="%s - Patient Monitor"
+            defaultTitle="Patient Monitor"
+            meta={[
+              { name: 'description', content: 'A Patient Monitor application' },
+            ]}
+          />
+          <AppBar title="Patient Monitor"
+          />
+          {React.Children.toArray(this.props.children)}
+        </div>
+      </MuiThemeProvider>
     );
   }
 }
