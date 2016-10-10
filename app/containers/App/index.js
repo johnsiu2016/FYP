@@ -24,6 +24,8 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
 // material-ui theme end
 
+import BottomNavBar from 'containers/BottomNavBar';
+
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   static propTypes = {
@@ -44,6 +46,7 @@ export default class App extends React.Component { // eslint-disable-line react/
           <AppBar title="Patient Monitor"
           />
           {React.Children.toArray(this.props.children)}
+          <BottomNavBar/>
         </div>
       </MuiThemeProvider>
     );

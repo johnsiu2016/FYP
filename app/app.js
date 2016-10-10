@@ -109,3 +109,6 @@ if (!window.Intl) {
 // we do not want it installed
 import { install } from 'offline-plugin/runtime';
 install();
+
+import injectTapEventPlugin from 'react-tap-event-plugin';
+injectTapEventPlugin();

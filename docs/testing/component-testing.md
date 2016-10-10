@@ -15,7 +15,7 @@ the _view_ layer of your app, let's see how to test Components too!
 
 React provides us with a nice add-on called the Shallow Renderer. This renderer
 will render a React component **one level deep**. Lets take a look at what that
-means with a simple `<Button>` component...
+means with a simple `<BottomNavBar>` component...
 
 This component renders a `<button>` element containing a checkmark icon and some
 text:
@@ -78,8 +78,8 @@ containing this "HTML":
 </button>             <!-- </Button>            -->
 ```
 
-If we test our `Button` with the normal renderer and there's a problem
-with the `CheckmarkIcon` then the test for the `Button` will fail as well...
+If we test our `BottomNavBar` with the normal renderer and there's a problem
+with the `CheckmarkIcon` then the test for the `BottomNavBar` will fail as well...
 but finding the culprit will be hard. Using the _shallow_ renderer, we isolate
 the problem's cause since we don't render any other components other than the
 one we're testing!
@@ -93,7 +93,7 @@ is a testing utility that gives us a nice assertion/traversal/manipulation API.
 
 ## Enzyme
 
-Lets test our `<Button>` component! We're going to assess three things: First,
+Lets test our `<BottomNavBar>` component! We're going to assess three things: First,
 that it renders a HTML `<button>` tag, second that it renders its children we
 pass it and third that handles clicks!
 
@@ -125,7 +125,7 @@ it('renders a <button>', () => {
 
 Nice! If somebody breaks our button component by having it render an `<a>` tag
 or something else we'll immediately know! Let's do something a bit more advanced
-now, and check that our `<Button>` renders its children.
+now, and check that our `<BottomNavBar>` renders its children.
 
 We render our button component with some text, and then verify that our text
 exists:
@@ -142,7 +142,7 @@ it('renders its children', () => {
 });
 ```
 
-Great! Onwards to our last and most advanced test: checking that our `<Button>` handles clicks correctly. We'll use a Spy for that. A Spy is a
+Great! Onwards to our last and most advanced test: checking that our `<BottomNavBar>` handles clicks correctly. We'll use a Spy for that. A Spy is a
 function that knows if, and how often, it has been called. We create the Spy
 (thoughtfully provided by `expect`), pass _it_ as the `onClick` handler to our
 component, simulate a click on the rendered `<button>` element and, lastly,
