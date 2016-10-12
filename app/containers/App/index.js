@@ -33,6 +33,12 @@ export default class App extends React.Component { // eslint-disable-line react/
   };
 
   render() {
+    var layouts = {
+      lg: [
+        {i: '1', x: 0, y: 0, w: 8, h: 4}
+      ]
+    };
+
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
         <div className={styles.container}>
@@ -43,8 +49,7 @@ export default class App extends React.Component { // eslint-disable-line react/
               { name: 'description', content: 'A Patient Monitor application' },
             ]}
           />
-          <AppBar title="Patient Monitor"
-          />
+          <AppBar title="Patient Monitor"/>
           {React.Children.toArray(this.props.children)}
           <BottomNavBar/>
         </div>
