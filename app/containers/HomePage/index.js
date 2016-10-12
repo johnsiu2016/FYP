@@ -14,34 +14,74 @@ import {FormattedMessage} from 'react-intl';
 import messages from './messages';
 
 import MaterialCard from 'components/MaterialCard';
+import SimpleLineChart from 'components/SimpleLineChart'
 
-import {Responsive, WidthProvider} from 'react-grid-layout';
+import ReactGrid, {Responsive, WidthProvider} from 'react-grid-layout';
+
 const ResponsiveReactGridLayout = WidthProvider(Responsive);
+const ReactGridLayout = WidthProvider(ReactGrid);
 
-export default class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+
+class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
 
   render() {
+
     var layouts = {
       lg: [
-        {i: '1', x: 0, y: 0, w: 4, h: 2.5, isResizable: false},
-        {i: '2', x: 8, y: 0, w: 4, h: 2.5}
+        {i: 'r11', x: 0, y: 0, w: 9, h: 0.96, static: true},
+        {i: 'r12', x: 9, y: 0, w: 3, h: 0.96, static: true},
+        {i: 'r21', x: 0, y: 0.96, w: 12, h: 0.04, static: true}
       ]
     };
 
-    return (
-      <ResponsiveReactGridLayout className="layout" layouts={layouts}
-                                 breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
-                                 cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}>
+    var layout = [
+      {i: 'a', x: 0, y: 0, w: 12, h: 1},
+      {i: 'b', x: 0, y: 1, w: 12, h: 1},
+      {i: 'c', x: 0, y: 2, w: 12, h: 1},
+      {i: 'd', x: 0, y: 3, w: 12, h: 1},
+      {i: 'e', x: 0, y: 4, w: 12, h: 1}
+    ];
 
-        <div key={"1"}>
-          <MaterialCard/>
+    return (
+      <ResponsiveReactGridLayout
+        layouts={layouts}
+        breakpoints={{lg: 1200, md: 996, sm: 768, xs: 480, xxs: 0}}
+        cols={{lg: 12, md: 10, sm: 6, xs: 4, xxs: 2}}
+        containerPadding={[0, 0]}
+        margin={[0, 0]}
+        rowHeight={window.innerHeight}>
+
+
+        <ReactGridLayout key={"r11"}
+                         layout={layout}
+                         cols={12}
+                         rowHeight={250}>
+
+          <div key={'a'}>
+            <SimpleLineChart/>
+          </div>
+
+          <div key={'b'}>
+            <SimpleLineChart/>
+          </div>
+
+          <div key={'c'}>
+            <SimpleLineChart/>
+          </div>
+
+        </ReactGridLayout>
+
+        <div key={"r12"} style={{background: 'red'}}>
+
         </div>
 
-        <div key={"2"}>
-          <MaterialCard/>
+        <div key={"r21"} style={{background: 'green'}}>
+
         </div>
 
       </ResponsiveReactGridLayout>
     );
   }
 }
+
+export default HomePage;
