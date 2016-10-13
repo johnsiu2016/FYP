@@ -16,10 +16,13 @@ import FlatButton from 'material-ui/FlatButton';
 
 function MaterialCard() {
   return (
-    <Card
-      className={styles.materialCard}
-    >
-
+    <Card className={styles.materialCard}>
+      <CardHeader
+        title="Heart Rate"
+      />
+      <CardText>
+        60
+      </CardText>
     </Card>
   );
 }

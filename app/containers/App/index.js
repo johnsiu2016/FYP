@@ -43,6 +43,7 @@ export default class App extends React.Component { // eslint-disable-line react/
               { name: 'description', content: 'A Patient Monitor application' },
             ]}
           />
+
           {React.Children.toArray(this.props.children)}
         </div>
       </MuiThemeProvider>

@@ -8,15 +8,15 @@ const WidthProvider = (ComposedComponent) => class extends Component {
 
   componentWillMount() {
     this.setState({
-      width: this.props.size.width,
-      rowHeight: this.props.size.height,
+      //width: this.props.size.width,
+      //rowHeight: this.props.size.height,
     });
   }
 
   componentWillReceiveProps(nextProps) {
     this.setState({
-      width: nextProps.size.width,
-      rowHeight: nextProps.size.height
+      //width: nextProps.size.width,
+      //rowHeight: nextProps.size.height
     });
   }
 
