@@ -35,16 +35,17 @@ export default class App extends React.Component { // eslint-disable-line react/
   render() {
     return (
       <MuiThemeProvider muiTheme={getMuiTheme(darkBaseTheme)}>
-        <div className={styles.container}>
+        <div>
           <Helmet
             titleTemplate="%s - Patient Monitor"
             defaultTitle="Patient Monitor"
             meta={[
-              { name: 'description', content: 'A Patient Monitor application' },
+              {name: 'description', content: 'A Patient Monitor application'},
             ]}
           />
-
-          {React.Children.toArray(this.props.children)}
+          <div className={styles.container}>
+            {React.Children.toArray(this.props.children)}
+          </div>
         </div>
       </MuiThemeProvider>
     );
