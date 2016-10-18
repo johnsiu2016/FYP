@@ -17,50 +17,115 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
   constructor(props) {
     super(props);
 
-    var self = this;
+    this.ecgDataBuffer = [];
+    this.ecgData = null;
     this.dataIndex = 0;
     this.maxY = 0;
     this.minY = 0;
-    this.data = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
-      0.08, 0.18, 0.08, 0, 0, 0, 0, 0, 0, -0.04,
-      -0.08, 0.3, 0.7, 0.3, -0.17, 0.00, 0.04, 0.04,
-      0.05, 0.05, 0.06, 0.07, 0.08, 0.10, 0.11, 0.11,
-      0.10, 0.085, 0.06, 0.04, 0.03, 0.01, 0.01, 0.01,
-      0.01, 0.02, 0.03, 0.05, 0.05, 0.05, 0.03, 0.02, 0, 0, 0].map(function (a) {
-      self.maxY = a > self.maxY ? a : self.maxY;
-      self.minY = a < self.minY ? a : self.minY;
-      return a;
-    });
+
+    this.canvas = null;
+    this.animationID = 0;
+    this.w = 0;
+    this.h = 0;
+    this.py = 0;
+
+    this.dataInterval = 0;
+    this.animationID = 0;
   }
 
   componentDidMount() {
     var self = this;
     var flag = true;
-    self.draw();
-    setInterval(function() {
+    self.test = self.draw();
+    self.test.start();
+
+    if (self.dataInterval) {
+      clearInterval(self.dataInterval);
+    }
+    self.dataInterval = setInterval(function () {
       self.requestData(flag).then((data) => {
-        self.data = data;
+        self.ecgDataBuffer.push(data);
         flag = !flag;
       });
 
-    }, 1000);
-
+    }, 1800);
   }
 
   componentDidUpdate() {
-    this.draw();
+    var self = this;
+    // var flag = true;
+    // self.draw();
+    // if (self.dataInterval) {
+    //   clearInterval(self.dataInterval);
+    // }
+    // self.dataInterval = setInterval(function () {
+    //   self.requestData(flag).then((data) => {
+    //     self.ecgDataBuffer.push(data);
+    //     flag = !flag;
+    //   });
+    //
+    // }, 1800);
+    // cancelAnimationFrame(self.animationID);
+    self.test.cancel();
+
   }
+
+  draw = () => {
+    var self = this;
+
+    var ecg = this.canvas;
+    var ctx = ecg.getContext('2d');
+    this.w = ecg.width;
+    this.h = ecg.height;
+    var px = 0;
+    var opx = 0;
+    var speed = 3;
+    var scanBarWidth = 20;
+
+    this.py = this.h / 2;
+    var opy = this.py;
+
+    var animationID;
+
+    ctx.strokeStyle = '#00bd00';
+    ctx.lineWidth = 3;
+
+    function animate() {
+      self.py = self.getDataPoint();
+      px += speed;
+
+      ctx.clearRect(px, 0, scanBarWidth, self.h);
+      ctx.beginPath();
+      ctx.moveTo(opx, opy);
+      ctx.lineTo(px, self.py);
+      ctx.stroke();
+
+      opx = px;
+      opy = self.py;
+
+      if (opx > self.w) {
+        px = opx = -speed;
+      }
+
+      animationID = requestAnimationFrame(animate);
+    }
+
+    return {
+      start: () => {
+        animationID = requestAnimationFrame(animate);
+      },
+      cancel: () => {
+        cancelAnimationFrame(animationID);
+      }
+    }
+  };
 
   requestData = (flag) => {
     var self = this;
     return (async function () {
-      console.log(`async   ${Date.now()/1000}`);
-      await self.sleep(100);
-      console.log(`async 2 ${Date.now()/1000}`);
+      await self.sleep(200);
       if (flag) {
-        return [
-          0, 0, 0, 0, 0.0000050048828125, 0.0000137939453125, 0.000049560546875, 0.00008740234375, 0.00015966796875,
+        return [0, 0, 0, 0, 0.0000050048828125, 0.0000137939453125, 0.000049560546875, 0.00008740234375, 0.00015966796875,
           0.000262451171875, 0.0003975830078125, 0.0005687255859375, 0.0007802734375, 0.001037353515625,
           0.0013468017578125, 0.00172119140625, 0.0021756591796875, 0.0027232666015625, 0.0033880615234375,
           0.004206787109375, 0.0052380371093750005, 0.006586181640625, 0.008400146484375001, 0.010904296875,
@@ -79,11 +144,12 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
           0.2200599365234375, 0.1728209228515625, 0.133416259765625, 0.086224853515625, 0.05493408203125,
           0.02409423828125, 0.00922607421875, -0.0043409423828125, -0.0097349853515625, -0.013127685546875,
           -0.01423095703125, -0.013834716796875, -0.012556030273437501, -0.010675048828125, -0.00835888671875,
-          -0.0057305908203125, -0.0000562744140625].map(function (a) {
-          self.maxY = a > self.maxY ? a : self.maxY;
-          self.minY = a < self.minY ? a : self.minY;
-          return a;
-        });
+          -0.0057305908203125, -0.0000562744140625]
+          .map(function (a) {
+            self.maxY = a > self.maxY ? a : self.maxY;
+            self.minY = a < self.minY ? a : self.minY;
+            return a;
+          });
       } else {
         return [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
           0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0,
@@ -91,11 +157,12 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
           -0.08, 0.3, 0.7, 0.3, -0.17, 0.00, 0.04, 0.04,
           0.05, 0.05, 0.06, 0.07, 0.08, 0.10, 0.11, 0.11,
           0.10, 0.085, 0.06, 0.04, 0.03, 0.01, 0.01, 0.01,
-          0.01, 0.02, 0.03, 0.05, 0.05, 0.05, 0.03, 0.02, 0, 0, 0].map(function (a) {
-          self.maxY = a > self.maxY ? a : self.maxY;
-          self.minY = a < self.minY ? a : self.minY;
-          return a;
-        });
+          0.01, 0.02, 0.03, 0.05, 0.05, 0.05, 0.03, 0.02, 0, 0, 0]
+          .map(function (a) {
+            self.maxY = a > self.maxY ? a : self.maxY;
+            self.minY = a < self.minY ? a : self.minY;
+            return a;
+          });
       }
     })();
   };
@@ -104,129 +171,42 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     var self = this;
     var py;
 
-    if (++self.dataIndex >= self.data.length) self.dataIndex = 0;
+    if (self.ecgData) {
+      if (self.props.a) {
+        py = ECG.convertToGraphCoord(self.ecgData[self.dataIndex], self.h);
+      } else {
+        py = ECG.myConvertToGraphCoord(self.ecgData[self.dataIndex], self.maxY, self.minY, self.h);
+      }
 
-    if (self.props.a) {
-      py = self.convertToGraphCoord(self.canvas, self.data[self.dataIndex]);
+      self.dataIndex = self.dataIndex + 1;
+      if (self.dataIndex >= self.ecgData.length) {
+        self.dataIndex = 0;
+        self.ecgData = self.ecgDataBuffer.shift();
+      }
+
+      return py;
+
     } else {
-      py = (((self.maxY - self.minY) / 2 - self.data[self.dataIndex]) / (self.maxY - self.minY)) * self.h;
+      if (self.ecgDataBuffer.length > 0) {
+        self.ecgData = self.ecgDataBuffer.shift();
+      }
+      return self.h / 2
     }
-
-    return py;
   };
 
+  static convertToGraphCoord(num, height) {
+    return (height / 2) * -(num * 0.8) + height / 2;
+  }
+
+  static myConvertToGraphCoord(num, maxY, minY, height) {
+    var deltaY = maxY - minY;
+    var midY = deltaY / 2;
+    return ((midY - num) / deltaY) * height;
+  }
 
   sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
-
-  convertToGraphCoord(g, num) {
-    return (g.height / 2) * -(num * 0.8) + g.height / 2;
-  }
-
-  draw = () => {
-    var self = this;
-
-    if (self.animation) {
-      cancelAnimationFrame(self.animation);
-      self.animation = null;
-    }
-
-    var ecg = this.canvas;
-    var ctx = ecg.getContext('2d');
-    this.w = ecg.width;
-    this.h = ecg.height;
-    var px = 0;
-    var opx = 0;
-    var speed = 3.5;
-    var scanBarWidth = 20;
-    var fps = 200;
-
-    this.py = this.h * 0.8;
-    var opy = this.py;
-
-    ctx.strokeStyle = '#00bd00';
-    ctx.lineWidth = 3;
-
-    animate();
-
-    function animate() {
-      setTimeout(function () {
-        self.py = self.getDataPoint();
-        px += speed;
-
-        ctx.clearRect(px, 0, scanBarWidth, self.h);
-        ctx.beginPath();
-        ctx.moveTo(opx, opy);
-        ctx.lineTo(px, self.py);
-        ctx.stroke();
-
-        opx = px;
-        opy = self.py;
-
-
-        if (opx > self.w) {
-          px = opx = -speed;
-        }
-
-        self.animation = requestAnimationFrame(animate);
-
-      }, 1000 / fps);
-    }
-  };
-
-  draw2 = () => {
-    var self = this;
-
-    if (self.animation) {
-      cancelAnimationFrame(self.animation);
-      self.animation = null;
-    }
-
-    var ecg = this.canvas;
-    var ctx = ecg.getContext('2d');
-
-    ctx.fillStyle = "#dbbd7a";
-    ctx.fill();
-
-    var fps = 60;
-    var n = 1;
-
-    var data = [
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,
-      148, 149, 149, 150, 150, 150, 143, 82, 82, 82, 82, 82, 82, 82,];
-
-    drawWave();
-
-    function drawWave() {
-      setTimeout(function () {
-        requestAnimationFrame(drawWave);
-        ctx.lineWidth = "3";
-        ctx.strokeStyle = 'green';
-
-        // Drawing code goes here
-        n += 1;
-        if (n >= data.length) {
-          n = 1;
-        }
-        ctx.beginPath();
-        ctx.moveTo(n - 1, data[n - 1]);
-        ctx.lineTo(n, data[n]);
-        ctx.stroke();
-
-        ctx.clearRect(n + 1, 0, 10, ecg.height);
-
-      }, 1000 / fps);
-    }
-  };
 
   onMouseMove = (e) => {
     var r = this.canvas.getBoundingClientRect();

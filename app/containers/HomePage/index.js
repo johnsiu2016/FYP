@@ -60,9 +60,7 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
               </div>
 
               <div key={'a2'}>
-                <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
-                  <ECG></ECG>
-                </Card>
+
               </div>
 
               <div key={'a3'}>
