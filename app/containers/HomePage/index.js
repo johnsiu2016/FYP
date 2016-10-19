@@ -55,16 +55,20 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
 
               <div key={'a1'}>
                 <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
-                  <ECG a={true}></ECG>
+                  <ECG/>
                 </Card>
               </div>
 
               <div key={'a2'}>
-
+                <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
+                  <ECG strokeStyle="#CC00FF" lineWidth={4}/>
+                </Card>
               </div>
 
               <div key={'a3'}>
-
+                <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
+                  <ECG strokeStyle="#FFFF00" lineWidth={5}/>
+                </Card>
               </div>
             </ReactGridLayout>
           </Col >

@@ -14,6 +14,11 @@ import Dimensions from 'react-dimensions'
 
 
 class ECG extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  static defaultProps = {
+    strokeStyle: '#00bd00',
+    lineWidth: 3
+  };
+
   constructor(props) {
     super(props);
 
@@ -24,25 +29,21 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     this.minY = 0;
 
     this.canvas = null;
-    this.animationID = 0;
     this.w = 0;
     this.h = 0;
     this.py = 0;
+    this.px = 0;
 
-    this.dataInterval = 0;
-    this.animationID = 0;
   }
 
   componentDidMount() {
     var self = this;
-    var flag = true;
-    self.test = self.draw();
-    self.test.start();
 
-    if (self.dataInterval) {
-      clearInterval(self.dataInterval);
-    }
-    self.dataInterval = setInterval(function () {
+    var flag = true;
+    self.animation = self.draw();
+    self.animation.start();
+
+    setInterval(function () {
       self.requestData(flag).then((data) => {
         self.ecgDataBuffer.push(data);
         flag = !flag;
@@ -53,21 +54,10 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
 
   componentDidUpdate() {
     var self = this;
-    // var flag = true;
-    // self.draw();
-    // if (self.dataInterval) {
-    //   clearInterval(self.dataInterval);
-    // }
-    // self.dataInterval = setInterval(function () {
-    //   self.requestData(flag).then((data) => {
-    //     self.ecgDataBuffer.push(data);
-    //     flag = !flag;
-    //   });
-    //
-    // }, 1800);
-    // cancelAnimationFrame(self.animationID);
-    self.test.cancel();
 
+    self.animation.cancel();
+    self.animation = self.draw();
+    self.animation.start();
   }
 
   draw = () => {
@@ -75,36 +65,34 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
 
     var ecg = this.canvas;
     var ctx = ecg.getContext('2d');
-    this.w = ecg.width;
-    this.h = ecg.height;
-    var px = 0;
-    var opx = 0;
     var speed = 3;
     var scanBarWidth = 20;
+    var animationID = 0;
 
-    this.py = this.h / 2;
-    var opy = this.py;
+    self.w = ecg.width;
+    self.h = ecg.height;
 
-    var animationID;
+    var opx = self.px;
+    var opy = self.py || self.h / 2;
 
-    ctx.strokeStyle = '#00bd00';
-    ctx.lineWidth = 3;
+    ctx.strokeStyle = this.props.strokeStyle;
+    ctx.lineWidth = this.props.lineWidth;
 
     function animate() {
       self.py = self.getDataPoint();
-      px += speed;
+      self.px += speed;
 
-      ctx.clearRect(px, 0, scanBarWidth, self.h);
+      ctx.clearRect(self.px, 0, scanBarWidth, self.h);
       ctx.beginPath();
       ctx.moveTo(opx, opy);
-      ctx.lineTo(px, self.py);
+      ctx.lineTo(self.px, self.py);
       ctx.stroke();
 
-      opx = px;
+      opx = self.px;
       opy = self.py;
 
       if (opx > self.w) {
-        px = opx = -speed;
+        self.px = opx = -speed;
       }
 
       animationID = requestAnimationFrame(animate);
@@ -172,11 +160,8 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     var py;
 
     if (self.ecgData) {
-      if (self.props.a) {
-        py = ECG.convertToGraphCoord(self.ecgData[self.dataIndex], self.h);
-      } else {
-        py = ECG.myConvertToGraphCoord(self.ecgData[self.dataIndex], self.maxY, self.minY, self.h);
-      }
+
+      py = ECG.convertToGraphCoord(self.ecgData[self.dataIndex], self.h);
 
       self.dataIndex = self.dataIndex + 1;
       if (self.dataIndex >= self.ecgData.length) {
