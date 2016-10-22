@@ -55,6 +55,10 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
   componentDidUpdate() {
     var self = this;
 
+    if (this.props.shouldResize) {
+      global.dispatchEvent(new Event('resize'));
+    }
+
     self.animation.cancel();
     self.animation = self.draw();
     self.animation.start();

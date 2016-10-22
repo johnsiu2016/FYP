@@ -28,15 +28,16 @@ import ECG from 'components/Ecg';
 
 import FontIcon from 'material-ui/FontIcon';
 
+import uuid from 'node-uuid';
+
 class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.state = {
       layout1: JSON.parse(JSON.stringify(HomePage.getFromLS('layout1'))) || HomePage.initialItem1(),
-      layout2: JSON.parse(JSON.stringify(HomePage.getFromLS('layout2'))) ||  HomePage.initialItem2(),
-      counter1: 1,
-      counter2: 1
+      layout2: JSON.parse(JSON.stringify(HomePage.getFromLS('layout2'))) ||  HomePage.initialItem1()
     };
+    this.shouldResize = false;
   }
 
   onLayoutChange1 = (layout1) => {
@@ -50,19 +51,21 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   resetLayout1 = () => {
+    this.shouldResize = true;
     this.setState({
-      layout1: HomePage.initialItem1()
+      layout1: HomePage.initialItem1(),
     });
   };
 
   resetLayout2 = () => {
     this.setState({
-      layout2: HomePage.initialItem2()
+      layout2: HomePage.initialItem2(),
     });
   };
 
-  onResizeStop = (layout, oldLayoutItem, layoutItem) => {
-
+  onResizeStop1 = () => {
+    this.shouldResize = true;
+    this.forceUpdate();
   };
 
   onAddItem1 = () => {
@@ -70,15 +73,13 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       layout1: [
         ...this.state.layout1,
         {
-          i: 'a' + this.state.counter1,
+          i: uuid.v4(),
           x: 0,
           y: Infinity, // puts it at the bottom
           w: 12,
           h: 1
         }
-      ],
-      // Increment the counter to ensure key is always unique.
-      counter1: this.state.counter1 + 1
+      ]
     });
   };
 
@@ -93,10 +94,16 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       top: 0,
       cursor: 'pointer'
     };
+    var resize = false;
+    if (this.shouldResize) {
+      resize = true;
+      this.shouldResize = false;
+    }
+
     return (
       <div key={el.i} data-grid={el}>
         <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
-          <ECG/>
+          <ECG shouldResize={resize}/>
         </Card>
         <FontIcon className="material-icons"
                   style={removeStyle}
@@ -112,14 +119,13 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       layout2: [
         ...this.state.layout2,
         {
-          i: 'b' + this.state.counter2,
+          i: uuid.v4(),
           x: 9,
           y: Infinity, // puts it at the bottom
           w: 12,
           h: 1
         }
-      ],
-      counter2: this.state.counter2 + 1
+      ]
     });
   };
 
@@ -158,7 +164,7 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
               cols={12}
               rowHeight={250}
               onLayoutChange={this.onLayoutChange1}
-              onResizeStop={this.onResizeStop}>
+              onResizeStop={this.onResizeStop1}>
 
               {this.state.layout1.map(this.createElement1)}
 
@@ -219,11 +225,11 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   static initialItem1 = () => [
-    {i: 'a0', x: 0, y: 0, w: 12, h: 1}
+    {i: uuid.v4(), x: 0, y: 0, w: 12, h: 1}
   ];
 
   static initialItem2 = () => [
-    {i: 'a0', x: 0, y: 0, w: 12, h: 1}
+    {i: uuid.v4(), x: 0, y: 0, w: 12, h: 1}
   ];
 }
 
