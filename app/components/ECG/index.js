@@ -179,16 +179,6 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     }
   };
 
-  static convertToGraphCoord(num, height) {
-    return (height / 2) * -(num * 0.8) + height / 2;
-  }
-
-  static myConvertToGraphCoord(num, maxY, minY, height) {
-    var deltaY = maxY - minY;
-    var midY = deltaY / 2;
-    return ((midY - num) / deltaY) * height;
-  }
-
   sleep(time) {
     return new Promise((resolve) => setTimeout(resolve, time));
   }
@@ -201,12 +191,22 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
   render() {
     var {containerWidth, containerHeight} = this.props;
     return (
-      <canvas ref={(c) => this.canvas = c}
-              width={containerWidth}
+      <canvas width={containerWidth}
               height={containerHeight}
+              ref={(c) => this.canvas = c}
               onMouseMove={this.onMouseMove}>
       </canvas>
     );
+  }
+
+  static convertToGraphCoord(num, height) {
+    return (height / 2) * -(num * 0.8) + height / 2;
+  }
+
+  static myConvertToGraphCoord(num, maxY, minY, height) {
+    var deltaY = maxY - minY;
+    var midY = deltaY / 2;
+    return ((midY - num) / deltaY) * height;
   }
 }
 

@@ -14,7 +14,6 @@ import {FormattedMessage} from 'react-intl';
 import messages from './messages';
 
 import MaterialCard from 'components/MaterialCard';
-import SimpleLineChart from 'components/SimpleLineChart'
 
 import ReactGrid, {WidthProvider} from 'react-grid-layout';
 const ReactGridLayout = WidthProvider(ReactGrid);
@@ -25,24 +24,130 @@ import {Grid, Row, Col} from 'react-bootstrap';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
 
-import SparkLine from 'components/SparkLine';
 import ECG from 'components/Ecg';
 
+import FontIcon from 'material-ui/FontIcon';
+
 class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  constructor(props) {
+    super(props);
+    this.state = {
+      layout1: JSON.parse(JSON.stringify(HomePage.getFromLS('layout1'))) || HomePage.initialItem1(),
+      layout2: JSON.parse(JSON.stringify(HomePage.getFromLS('layout2'))) ||  HomePage.initialItem2(),
+      counter1: 1,
+      counter2: 1
+    };
+  }
+
+  onLayoutChange1 = (layout1) => {
+    HomePage.saveToLS('layout1', layout1);
+    this.setState({layout1});
+  };
+
+  onLayoutChange2 = (layout2) => {
+    HomePage.saveToLS('layout2', layout2);
+    this.setState({layout2});
+  };
+
+  resetLayout1 = () => {
+    this.setState({
+      layout1: HomePage.initialItem1()
+    });
+  };
+
+  resetLayout2 = () => {
+    this.setState({
+      layout2: HomePage.initialItem2()
+    });
+  };
+
+  onResizeStop = (layout, oldLayoutItem, layoutItem) => {
+
+  };
+
+  onAddItem1 = () => {
+    this.setState({
+      layout1: [
+        ...this.state.layout1,
+        {
+          i: 'a' + this.state.counter1,
+          x: 0,
+          y: Infinity, // puts it at the bottom
+          w: 12,
+          h: 1
+        }
+      ],
+      // Increment the counter to ensure key is always unique.
+      counter1: this.state.counter1 + 1
+    });
+  };
+
+  onRemoveItem1 = (i) => {
+    this.setState({layout1: this.state.layout1.filter((el) => el.i != i)});
+  };
+
+  createElement1 = (el) => {
+    var removeStyle = {
+      position: 'absolute',
+      right: '2px',
+      top: 0,
+      cursor: 'pointer'
+    };
+    return (
+      <div key={el.i} data-grid={el}>
+        <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
+          <ECG/>
+        </Card>
+        <FontIcon className="material-icons"
+                  style={removeStyle}
+                  onClick={this.onRemoveItem1.bind(this, el.i)}>
+          close
+        </FontIcon>
+      </div>
+    )
+  };
+
+  onAddItem2 = () => {
+    this.setState({
+      layout2: [
+        ...this.state.layout2,
+        {
+          i: 'b' + this.state.counter2,
+          x: 9,
+          y: Infinity, // puts it at the bottom
+          w: 12,
+          h: 1
+        }
+      ],
+      counter2: this.state.counter2 + 1
+    });
+  };
+
+  onRemoveItem2 = (i) => {
+    this.setState({layout2: this.state.layout2.filter((el) => el.i != i)});
+  };
+
+  createElement2 = (el) => {
+    var removeStyle = {
+      position: 'absolute',
+      right: '2px',
+      top: 0,
+      cursor: 'pointer'
+    };
+    return (
+      <div key={el.i} data-grid={el}>
+        <MaterialCard/>
+        <FontIcon className="material-icons"
+                  style={removeStyle}
+                  onClick={this.onRemoveItem2.bind(this, el.i)}>
+          close
+        </FontIcon>
+      </div>
+    )
+  };
 
   render() {
-
-    var layout1 = [
-      {i: 'a1', x: 0, y: 0, w: 12, h: 1},
-      {i: 'a2', x: 0, y: 1, w: 12, h: 1},
-      {i: 'a3', x: 0, y: 2, w: 12, h: 1}
-    ];
-
-    var layout2 = [
-      {i: 'b1', x: 9, y: 0, w: 12, h: 1},
-      {i: 'b2', x: 9, y: 1, w: 12, h: 1},
-      {i: 'b3', x: 9, y: 2, w: 12, h: 1}
-    ];
+    const {layout1, layout2} = this.state;
 
     return (
       <Grid fluid={true}>
@@ -51,46 +156,37 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
             <ReactGridLayout
               layout={layout1}
               cols={12}
-              rowHeight={250}>
+              rowHeight={250}
+              onLayoutChange={this.onLayoutChange1}
+              onResizeStop={this.onResizeStop}>
 
-              <div key={'a1'}>
-                <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
-                  <ECG/>
-                </Card>
-              </div>
+              {this.state.layout1.map(this.createElement1)}
 
-              <div key={'a2'}>
-                <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
-                  <ECG strokeStyle="#CC00FF" lineWidth={4}/>
-                </Card>
-              </div>
-
-              <div key={'a3'}>
-                <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
-                  <ECG strokeStyle="#FFFF00" lineWidth={5}/>
-                </Card>
-              </div>
             </ReactGridLayout>
+            <div>
+              <button onClick={this.resetLayout1} style={{color: 'red'}}>reset</button>
+            </div>
+            <div>
+              <button onClick={this.onAddItem1} style={{color: 'red'}}>add</button>
+            </div>
           </Col >
+
           <Col lg={4} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
             <ReactGridLayout
               layout={layout2}
               cols={12}
-              rowHeight={200}>
+              rowHeight={200}
+              onLayoutChange={this.onLayoutChange2}>
 
-              <div key={'b1'}>
-                <MaterialCard/>
-              </div>
-
-              <div key={'b2'}>
-                <MaterialCard/>
-              </div>
-
-              <div key={'b3'}>
-                <MaterialCard/>
-              </div>
+              {this.state.layout2.map(this.createElement2)}
 
             </ReactGridLayout>
+            <div>
+              <button onClick={this.resetLayout2} style={{color: 'red'}}>reset</button>
+            </div>
+            <div>
+              <button onClick={this.onAddItem2} style={{color: 'red'}}>add</button>
+            </div>
           </Col>
         </Row>
         <Row style={{height: '5vh', background: grey700}}>
@@ -101,6 +197,34 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       </Grid>
     );
   }
+
+  static getFromLS = (key) => {
+    if (localStorage) {
+      try {
+        return JSON.parse(localStorage.getItem(key)) || null;
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  static saveToLS = (key, value) => {
+    if (localStorage) {
+      try {
+        localStorage.setItem(key, JSON.stringify(value));
+      } catch (e) {
+        console.log(e);
+      }
+    }
+  };
+
+  static initialItem1 = () => [
+    {i: 'a0', x: 0, y: 0, w: 12, h: 1}
+  ];
+
+  static initialItem2 = () => [
+    {i: 'a0', x: 0, y: 0, w: 12, h: 1}
+  ];
 }
 
 export default HomePage;
