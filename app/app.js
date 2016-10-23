@@ -27,7 +27,6 @@ import configureStore from './store';
 import { translationMessages } from './i18n';
 
 // Import the CSS reset, which HtmlWebpackPlugin transfers to the build folder
-import 'sanitize.css/sanitize.css';
 import 'react-grid-layout/css/styles.css';
 import 'react-resizable/css/styles.css';
 

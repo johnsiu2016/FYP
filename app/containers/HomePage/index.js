@@ -30,12 +30,32 @@ import FontIcon from 'material-ui/FontIcon';
 
 import uuid from 'node-uuid';
 
+import FloatingActionButton from 'material-ui/FloatingActionButton';
+
+import ContentAdd from 'material-ui/svg-icons/content/add';
+
+import IconMenu from 'material-ui/IconMenu';
+import MenuItem from 'material-ui/MenuItem';
+import IconButton from 'material-ui/IconButton';
+import Divider from 'material-ui/Divider';
+import Download from 'material-ui/svg-icons/file/file-download';
+import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
+import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
+
+import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
+import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
+
+import Dialog from 'material-ui/Dialog';
+import FlatButton from 'material-ui/FlatButton';
+import RaisedButton from 'material-ui/RaisedButton';
+
 class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
     this.state = {
       layout1: JSON.parse(JSON.stringify(HomePage.getFromLS('layout1'))) || HomePage.initialItem1(),
-      layout2: JSON.parse(JSON.stringify(HomePage.getFromLS('layout2'))) ||  HomePage.initialItem1()
+      layout2: JSON.parse(JSON.stringify(HomePage.getFromLS('layout2'))) || HomePage.initialItem1(),
+      open: false
     };
     this.shouldResize = false;
   }
@@ -87,6 +107,14 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
     this.setState({layout1: this.state.layout1.filter((el) => el.i != i)});
   };
 
+  handleOpen = () => {
+    this.setState({open: true});
+  };
+
+  handleClose = () => {
+    this.setState({open: false});
+  };
+
   createElement1 = (el) => {
     var removeStyle = {
       position: 'absolute',
@@ -94,22 +122,60 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       top: 0,
       cursor: 'pointer'
     };
-    var resize = false;
-    if (this.shouldResize) {
-      resize = true;
-      this.shouldResize = false;
-    }
+    var resize = this.shouldResize;
+    this.shouldResize = false;
 
     return (
       <div key={el.i} data-grid={el}>
-        <Card style={{height: '100%', width: '100%'}} containerStyle={{height: '100%', width: '100%'}}>
-          <ECG shouldResize={resize}/>
+        <div style={{height: '18%', fontSize: '2em', color: '#00bd00'}}>
+          ECG - II
+        </div>
+        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '82%', width: '100%'}}>
+          <ECG shouldResize={resize || false}/>
         </Card>
-        <FontIcon className="material-icons"
-                  style={removeStyle}
-                  onClick={this.onRemoveItem1.bind(this, el.i)}>
-          close
-        </FontIcon>
+        <IconMenu style={removeStyle}
+                  iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
+        >
+          <MenuItem primaryText="Waveform Type"
+                    leftIcon={<div>
+                      <FontIcon className="material-icons">
+                        show_chart
+                      </FontIcon>
+                      <Dialog
+                        title="Waveform Type"
+                        actions={[
+                          <FlatButton
+                            label="Ok"
+                            primary={true}
+                            keyboardFocused={true}
+                            onTouchTap={this.handleClose}
+                          />,
+                        ]}
+                        modal={false}
+                        open={this.state.open}
+                        onRequestClose={this.handleClose}
+                      >
+                        Open a Date Picker dialog from within a dialog.
+                      </Dialog>
+                    </div>
+                    }
+                    onTouchTap={this.handleOpen}/>
+          <Divider />
+          <MenuItem primaryText="Color"
+                    leftIcon={
+                      <FontIcon className="material-icons">
+                        color_lens
+                      </FontIcon>
+                    }/>
+          <Divider />
+          <MenuItem primaryText="Delete"
+                    leftIcon={
+                      <FontIcon className="material-icons">
+                        close
+                      </FontIcon>
+                    }
+                    onClick={this.onRemoveItem1.bind(this, el.i)}/>
+        </IconMenu>
       </div>
     )
   };
@@ -169,11 +235,11 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
               {this.state.layout1.map(this.createElement1)}
 
             </ReactGridLayout>
+            <FloatingActionButton onClick={this.onAddItem1}>
+              <ContentAdd/>
+            </FloatingActionButton>
             <div>
               <button onClick={this.resetLayout1} style={{color: 'red'}}>reset</button>
-            </div>
-            <div>
-              <button onClick={this.onAddItem1} style={{color: 'red'}}>add</button>
             </div>
           </Col >
 
@@ -195,8 +261,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
             </div>
           </Col>
         </Row>
-        <Row style={{height: '5vh', background: grey700}}>
-          <Col lg={12}>
+        <Row>
+          <Col lg={12} style={{height: '5vh', background: grey700}}>
 
           </Col>
         </Row>

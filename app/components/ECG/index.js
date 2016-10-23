@@ -11,6 +11,7 @@ import messages from './messages';
 import styles from './styles.css';
 
 import Dimensions from 'react-dimensions'
+import {Grid, Row, Col} from 'react-bootstrap';
 
 
 class ECG extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -197,8 +198,7 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     return (
       <canvas width={containerWidth}
               height={containerHeight}
-              ref={(c) => this.canvas = c}
-              onMouseMove={this.onMouseMove}>
+              ref={(c) => this.canvas = c}>
       </canvas>
     );
   }
