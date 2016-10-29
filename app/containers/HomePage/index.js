@@ -49,20 +49,49 @@ import Dialog from 'material-ui/Dialog';
 import FlatButton from 'material-ui/FlatButton';
 import RaisedButton from 'material-ui/RaisedButton';
 
+import {List, ListItem} from 'material-ui/List';
+import Subheader from 'material-ui/Subheader';
+import Checkbox from 'material-ui/Checkbox';
+import Toggle from 'material-ui/Toggle';
+
+import Slider from 'material-ui/Slider';
+
+import SelectField from 'material-ui/SelectField';
+
+import Drawer from 'material-ui/Drawer';
+
+import ContentInbox from 'material-ui/svg-icons/content/inbox';
+
 class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
     super(props);
-    this.state = {
-      layout1: JSON.parse(JSON.stringify(HomePage.getFromLS('layout1'))) || HomePage.initialItem1(),
-      layout2: JSON.parse(JSON.stringify(HomePage.getFromLS('layout2'))) || HomePage.initialItem1(),
-      open: false
+
+    var i = uuid.v4();
+    var tempLayout = HomePage.initialLayout1();
+    tempLayout[0].i = i;
+    var tempItems = {
+      [i]: HomePage.initialItems1()
     };
+
+    this.state = {
+      layout1: JSON.parse(JSON.stringify(HomePage.getFromLS('layout1'))) || tempLayout,
+      layout2: JSON.parse(JSON.stringify(HomePage.getFromLS('layout2'))) || HomePage.initialItem2(),
+      items1: JSON.parse(JSON.stringify(HomePage.getFromLS('items1'))) || tempItems,
+      leftDrawer: {
+        i: '',
+        open: false
+      }
+    };
+
     this.shouldResize = false;
   }
 
   onLayoutChange1 = (layout1) => {
     HomePage.saveToLS('layout1', layout1);
-    this.setState({layout1});
+    HomePage.saveToLS('items1', this.state.items1);
+    this.setState({
+      layout1
+    });
   };
 
   onLayoutChange2 = (layout2) => {
@@ -71,9 +100,17 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   resetLayout1 = () => {
+    var i = uuid.v4();
+    var tempLayout = HomePage.initialLayout1();
+    tempLayout[0].i = i;
+    var tempItems = {
+      [i]: HomePage.initialItems1()
+    };
+
     this.shouldResize = true;
     this.setState({
-      layout1: HomePage.initialItem1(),
+      layout1: tempLayout,
+      items1: tempItems
     });
   };
 
@@ -89,17 +126,28 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   onAddItem1 = () => {
+    var i = uuid.v4();
     this.setState({
       layout1: [
         ...this.state.layout1,
         {
-          i: uuid.v4(),
+          i: i,
           x: 0,
           y: Infinity, // puts it at the bottom
           w: 12,
           h: 1
         }
-      ]
+      ],
+      items1: {
+        ... this.state.items1,
+        [i]: {
+          waveform: 'RBBB',
+          strokeStyle: 'yellow',
+          scale: 0.8,
+          speed: 3,
+          lineWidth: 3
+        }
+      }
     });
   };
 
@@ -115,67 +163,71 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
     this.setState({open: false});
   };
 
+  handleToggle = () => this.setState({open: !this.state.open});
+
+  handleChange = (event, index, value) => {
+    console.log(value);
+    this.setState({value});
+  };
+
   createElement1 = (el) => {
     var removeStyle = {
       position: 'absolute',
-      right: '2px',
       top: 0,
+      right: '0px',
       cursor: 'pointer'
     };
     var resize = this.shouldResize;
     this.shouldResize = false;
 
+    el = {
+      ...el,
+      ...this.state.items1[el.i]
+    };
+
     return (
       <div key={el.i} data-grid={el}>
-        <div style={{height: '18%', fontSize: '2em', color: '#00bd00'}}>
-          ECG - II
+        <div style={{height: '15%'}}>
+          <span style={{fontSize: '2em', color: '#00bd00', position: 'absolute', left: '0px'}}>ECG - II</span>
+
+          <IconMenu style={removeStyle}
+                    iconButtonElement={
+                      <IconButton>
+                        <FontIcon className="material-icons">
+                          more_vert
+                        </FontIcon>
+                      </IconButton>
+                    }
+          >
+            <MenuItem primaryText="Waveform"
+                      leftIcon={
+                        <div>
+                          <FontIcon className="material-icons">
+                            show_chart
+                          </FontIcon>
+                        </div>
+                      }
+                      onTouchTap={this.handleOpen}/>
+            <MenuItem primaryText="Delete"
+                      leftIcon={
+                        <div>
+                          <FontIcon className="material-icons">
+                            close
+                          </FontIcon>
+                        </div>
+                      }
+                      onClick={this.onRemoveItem1.bind(this, el.i)}/>
+          </IconMenu>
+
         </div>
-        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '82%', width: '100%'}}>
-          <ECG shouldResize={resize || false}/>
+        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%'}}>
+          <ECG shouldResize={resize || false}
+               waveform={el.waveform}
+               strokeStyle={el.strokeStyle}
+               lineWidth={el.lineWidth}
+               scale={el.scale}
+               speed={el.speed}/>
         </Card>
-        <IconMenu style={removeStyle}
-                  iconButtonElement={<IconButton><MoreVertIcon /></IconButton>}
-        >
-          <MenuItem primaryText="Waveform Type"
-                    leftIcon={<div>
-                      <FontIcon className="material-icons">
-                        show_chart
-                      </FontIcon>
-                      <Dialog
-                        title="Waveform Type"
-                        actions={[
-                          <FlatButton
-                            label="Ok"
-                            primary={true}
-                            keyboardFocused={true}
-                            onTouchTap={this.handleClose}
-                          />,
-                        ]}
-                        modal={false}
-                        open={this.state.open}
-                        onRequestClose={this.handleClose}
-                      >
-                        Open a Date Picker dialog from within a dialog.
-                      </Dialog>
-                    </div>
-                    }
-                    onTouchTap={this.handleOpen}/>
-          <Divider />
-          <MenuItem primaryText="Color"
-                    leftIcon={
-                      <FontIcon className="material-icons">
-                        color_lens
-                      </FontIcon>
-                    }/>
-          <Divider />
-          <MenuItem primaryText="Delete"
-                    leftIcon={
-                      <FontIcon className="material-icons">
-                        close
-                      </FontIcon>
-                    }
-                    onClick={this.onRemoveItem1.bind(this, el.i)}/>
-        </IconMenu>
       </div>
     )
   };
@@ -241,6 +293,71 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
             <div>
               <button onClick={this.resetLayout1} style={{color: 'red'}}>reset</button>
             </div>
+            <Drawer
+              width={300}
+              open={this.state.open}
+              openSecondary={true}
+            >
+              <List>
+                <Subheader>WaveForm Type and Color</Subheader>
+                <ListItem>
+                  <div>WaveForm</div>
+                  <SelectField
+                    floatingLabelText="WaveForm Type"
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                  >
+                    <MenuItem value={1} primaryText="Never"/>
+                    <MenuItem value={2} primaryText="Every Night"/>
+                    <MenuItem value={3} primaryText="Weeknights"/>
+                  </SelectField>
+                </ListItem>
+                <ListItem>
+                  <div>Color</div>
+                  <SelectField
+                    floatingLabelText="Color Display"
+                    value={this.state.value}
+                    onChange={this.handleChange}
+                  >
+                    <MenuItem value={1} primaryText="Never"/>
+                    <MenuItem value={2} primaryText="Every Night"/>
+                    <MenuItem value={3} primaryText="Weeknights"/>
+                  </SelectField>
+                </ListItem>
+              </List>
+              <Divider />
+              <List>
+                <Subheader>Scale and Speed</Subheader>
+                <div>
+                  <ListItem>
+                    <div>Scale</div>
+                    <Slider
+                      min={0}
+                      max={100}
+                      step={5}
+                      defaultValue={50}
+                      value={this.state.secondSlider}
+                      onChange={this.handleSecondSlider}
+                    />
+                  </ListItem>
+
+                  <ListItem>
+                    <div>Speed</div>
+                    <Slider
+                      min={0}
+                      max={100}
+                      step={10}
+                      defaultValue={50}
+                      value={this.state.secondSlider}
+                      onChange={this.handleSecondSlider}
+                    />
+                  </ListItem>
+                </div>
+              </List>
+              <Divider />
+              <MenuItem onTouchTap={this.handleClose}>Finish</MenuItem>
+              <MenuItem onTouchTap={this.handleClose}>Reset</MenuItem>
+            </Drawer>
           </Col >
 
           <Col lg={4} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
@@ -290,9 +407,22 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
     }
   };
 
-  static initialItem1 = () => [
-    {i: uuid.v4(), x: 0, y: 0, w: 12, h: 1}
+  static initialLayout1 = () => [
+    {
+      x: 0,
+      y: 0,
+      w: 12,
+      h: 1
+    }
   ];
+
+  static initialItems1 = () => ({
+      waveform: 'RBBB',
+      strokeStyle: 'yellow',
+      scale: 0.8,
+      speed: 3,
+      lineWidth: 3
+  });
 
   static initialItem2 = () => [
     {i: uuid.v4(), x: 0, y: 0, w: 12, h: 1}
