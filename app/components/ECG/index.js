@@ -76,7 +76,8 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     strokeStyle: 'green',
     lineWidth: 3,
     scale: 0.8,
-    speed: 3
+    speed: 3,
+    showBuffer: true
   };
 
   constructor(props) {
@@ -92,6 +93,7 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     this.py = 0;
     this.px = 0;
 
+    this.interval = null;
   }
 
   componentDidMount() {
@@ -100,14 +102,20 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
     self.animation = self.draw();
     self.animation.start();
 
-    setInterval(function () {
+    this.interval = setInterval(function () {
       self.requestData(self.props.waveform).then((data) => {
         self.ecgDataBuffer.push(data);
+        if (self.props.showBuffer) {
+          console.log(`${self.props.waveform} buffer: ${self.ecgDataBuffer.length}`);
+        }
       });
-
     }, 1800);
 
     global.dispatchEvent(new Event('resize'));
+  }
+
+  componentWillUnmount() {
+    clearInterval(this.interval);
   }
 
   componentDidUpdate() {

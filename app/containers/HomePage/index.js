@@ -259,7 +259,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
                strokeStyle={el.strokeStyle}
                lineWidth={el.lineWidth}
                scale={el.scale}
-               speed={el.speed}/>
+               speed={el.speed}
+               showBuffer={true}/>
         </Card>
       </div>
     )
@@ -293,7 +294,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
                strokeStyle={el.strokeStyle}
                lineWidth={el.lineWidth}
                scale={el.scale}
-               speed={el.speed}/>
+               speed={el.speed}
+               showBuffer={false}/>
         </div>
       </div>
     )
