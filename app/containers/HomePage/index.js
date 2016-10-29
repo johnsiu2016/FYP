@@ -406,6 +406,7 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
                     <MenuItem value="ECG - II" primaryText="ECG - II"/>
                     <MenuItem value="PPG" primaryText="PPG"/>
                     <MenuItem value="RBBB" primaryText="RBBB"/>
+                    <MenuItem value="Bigeminy" primaryText="Bigeminy"/>
                   </SelectField>
                 </ListItem>
                 <ListItem>
