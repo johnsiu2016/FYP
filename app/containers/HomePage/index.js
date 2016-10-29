@@ -22,7 +22,7 @@ import {grey900, grey800, grey700} from 'material-ui/styles/colors';
 
 import {Grid, Row, Col} from 'react-bootstrap';
 
-import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import {Card} from 'material-ui/Card';
 
 import ECG from 'components/Ecg';
 
@@ -32,27 +32,11 @@ import uuid from 'node-uuid';
 
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
-import ContentAdd from 'material-ui/svg-icons/content/add';
-
-import IconMenu from 'material-ui/IconMenu';
 import MenuItem from 'material-ui/MenuItem';
-import IconButton from 'material-ui/IconButton';
 import Divider from 'material-ui/Divider';
-import Download from 'material-ui/svg-icons/file/file-download';
-import ArrowDropRight from 'material-ui/svg-icons/navigation-arrow-drop-right';
-import MoreVertIcon from 'material-ui/svg-icons/navigation/more-vert';
-
-import NavigationExpandMoreIcon from 'material-ui/svg-icons/navigation/expand-more';
-import {Toolbar, ToolbarGroup, ToolbarSeparator, ToolbarTitle} from 'material-ui/Toolbar';
-
-import Dialog from 'material-ui/Dialog';
-import FlatButton from 'material-ui/FlatButton';
-import RaisedButton from 'material-ui/RaisedButton';
 
 import {List, ListItem} from 'material-ui/List';
 import Subheader from 'material-ui/Subheader';
-import Checkbox from 'material-ui/Checkbox';
-import Toggle from 'material-ui/Toggle';
 
 import Slider from 'material-ui/Slider';
 
@@ -60,7 +44,11 @@ import SelectField from 'material-ui/SelectField';
 
 import Drawer from 'material-ui/Drawer';
 
-import ContentInbox from 'material-ui/svg-icons/content/inbox';
+var color = {
+  'green': '#00bd00',
+  'purple': '#CC00FF',
+  'yellow': '#FFFF00'
+};
 
 class HomePage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   constructor(props) {
@@ -80,7 +68,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       leftDrawer: {
         i: '',
         open: false
-      }
+      },
+      play: false
     };
 
     this.shouldResize = false;
@@ -141,9 +130,9 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       items1: {
         ... this.state.items1,
         [i]: {
-          waveform: 'RBBB',
-          strokeStyle: 'yellow',
-          scale: 0.8,
+          waveform: 'ECG - II',
+          strokeStyle: 'green',
+          scale: 0.7,
           speed: 3,
           lineWidth: 3
         }
@@ -152,25 +141,82 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   onRemoveItem1 = (i) => {
-    this.setState({layout1: this.state.layout1.filter((el) => el.i != i)});
+    var temp = {
+      ...this.state.items1,
+    };
+    delete temp[i];
+    this.setState({
+      layout1: this.state.layout1.filter((el) => el.i != i),
+      items1: temp
+    });
   };
 
-  handleOpen = () => {
-    this.setState({open: true});
+  onPlay1 = () => {
+    this.setState({
+      play: !this.state.play
+    });
   };
 
-  handleClose = () => {
-    this.setState({open: false});
+  handleLeftDrawerToggle = (i) => {
+    this.setState({
+      leftDrawer: {
+        i: i,
+        open: !this.state.leftDrawer.open
+      }
+    });
   };
 
-  handleToggle = () => this.setState({open: !this.state.open});
-
-  handleChange = (event, index, value) => {
-    console.log(value);
-    this.setState({value});
+  handleLeftDrawerClose = () => {
+    HomePage.saveToLS('items1', this.state.items1);
+    this.setState({
+      leftDrawer: {
+        i: '',
+        open: false
+      }
+    });
   };
 
-  createElement1 = (el) => {
+  handleWaveFromChange = (event, index, value) => {
+    var temp = {
+      ...this.state.items1,
+    };
+    temp[this.state.leftDrawer.i].waveform = value;
+    this.setState({
+      items1: temp
+    });
+  };
+
+  handleColorChange = (event, index, value) => {
+    var temp = {
+      ...this.state.items1,
+    };
+    temp[this.state.leftDrawer.i].strokeStyle = value;
+    this.setState({
+      items1: temp
+    });
+  };
+
+  handleScaleChange = (event, value) => {
+    var temp = {
+      ...this.state.items1,
+    };
+    temp[this.state.leftDrawer.i].scale = value;
+    this.setState({
+      items1: temp
+    });
+  };
+
+  handleSpeedChange = (event, value) => {
+    var temp = {
+      ...this.state.items1,
+    };
+    temp[this.state.leftDrawer.i].speed = value;
+    this.setState({
+      items1: temp
+    });
+  };
+
+  createCustomElement1 = (el) => {
     var removeStyle = {
       position: 'absolute',
       top: 0,
@@ -188,36 +234,23 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
     return (
       <div key={el.i} data-grid={el}>
         <div style={{height: '15%'}}>
-          <span style={{fontSize: '2em', color: '#00bd00', position: 'absolute', left: '0px'}}>ECG - II</span>
+          <span style={{
+            fontSize: '2em',
+            color: color[el.strokeStyle],
+            position: 'absolute',
+            left: '0px'
+          }}>{el.waveform}</span>
 
-          <IconMenu style={removeStyle}
-                    iconButtonElement={
-                      <IconButton>
-                        <FontIcon className="material-icons">
-                          more_vert
-                        </FontIcon>
-                      </IconButton>
-                    }
-          >
-            <MenuItem primaryText="Waveform"
-                      leftIcon={
-                        <div>
-                          <FontIcon className="material-icons">
-                            show_chart
-                          </FontIcon>
-                        </div>
-                      }
-                      onTouchTap={this.handleOpen}/>
-            <MenuItem primaryText="Delete"
-                      leftIcon={
-                        <div>
-                          <FontIcon className="material-icons">
-                            close
-                          </FontIcon>
-                        </div>
-                      }
-                      onClick={this.onRemoveItem1.bind(this, el.i)}/>
-          </IconMenu>
+          <FontIcon className="material-icons" style={{position: 'absolute', top: 0, right: '30px', cursor: 'pointer'}}
+                    onTouchTap={this.handleLeftDrawerToggle.bind(this, el.i)}>
+            build
+          </FontIcon>
+
+          <FontIcon style={removeStyle}
+                    className="material-icons"
+                    onClick={this.onRemoveItem1.bind(this, el.i)}>
+            close
+          </FontIcon>
 
         </div>
         <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%'}}>
@@ -228,6 +261,40 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
                scale={el.scale}
                speed={el.speed}/>
         </Card>
+      </div>
+    )
+  };
+
+  createPlayElement1 = (el) => {
+    var resize = this.shouldResize;
+    this.shouldResize = false;
+
+    el = {
+      ...el,
+      ...this.state.items1[el.i]
+    };
+
+    return (
+      <div key={el.i} data-grid={el}>
+        <div style={{height: '15%'}}>
+          <span style={{
+            fontSize: '2em',
+            color: color[el.strokeStyle],
+            position: 'absolute',
+            left: '0px'
+          }}
+          >
+            {el.waveform}
+          </span>
+        </div>
+        <div style={{height: '85%', width: '100%'}}>
+          <ECG shouldResize={resize || false}
+               waveform={el.waveform}
+               strokeStyle={el.strokeStyle}
+               lineWidth={el.lineWidth}
+               scale={el.scale}
+               speed={el.speed}/>
+        </div>
       </div>
     )
   };
@@ -271,31 +338,58 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   render() {
-    const {layout1, layout2} = this.state;
+    const {layout1, layout2, items1, leftDrawer, play} = this.state;
 
-    return (
+    var waveformValue = items1[leftDrawer.i] ? items1[leftDrawer.i].waveform : "ECG - II";
+    var colorValue = items1[leftDrawer.i] ? items1[leftDrawer.i].strokeStyle : "green";
+    var scaleValue = items1[leftDrawer.i] ? items1[leftDrawer.i].scale : 0.8;
+    var speedValue = items1[leftDrawer.i] ? items1[leftDrawer.i].speed : 3;
+
+    var customMode = (
       <Grid fluid={true}>
         <Row>
-          <Col lg={8} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
+          <Col lg={9} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
             <ReactGridLayout
               layout={layout1}
               cols={12}
-              rowHeight={250}
+              rowHeight={200}
               onLayoutChange={this.onLayoutChange1}
               onResizeStop={this.onResizeStop1}>
 
-              {this.state.layout1.map(this.createElement1)}
+              {this.state.layout1.map(this.createCustomElement1)}
 
             </ReactGridLayout>
-            <FloatingActionButton onClick={this.onAddItem1}>
-              <ContentAdd/>
-            </FloatingActionButton>
-            <div>
-              <button onClick={this.resetLayout1} style={{color: 'red'}}>reset</button>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'row wrap',
+              justifyContent: 'flex-end'
+            }}
+            >
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={this.resetLayout1}>
+                <FontIcon className="material-icons">
+                  restore
+                </FontIcon>
+              </FloatingActionButton>
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={this.onAddItem1}>
+                <FontIcon className="material-icons">
+                  add
+                </FontIcon>
+              </FloatingActionButton>
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={this.onPlay1}>
+                <FontIcon className="material-icons">
+                  play_arrow
+                </FontIcon>
+              </FloatingActionButton>
             </div>
             <Drawer
               width={300}
-              open={this.state.open}
+              open={this.state.leftDrawer.open}
               openSecondary={true}
             >
               <List>
@@ -304,24 +398,24 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
                   <div>WaveForm</div>
                   <SelectField
                     floatingLabelText="WaveForm Type"
-                    value={this.state.value}
-                    onChange={this.handleChange}
+                    value={waveformValue}
+                    onChange={this.handleWaveFromChange}
                   >
-                    <MenuItem value={1} primaryText="Never"/>
-                    <MenuItem value={2} primaryText="Every Night"/>
-                    <MenuItem value={3} primaryText="Weeknights"/>
+                    <MenuItem value="ECG - II" primaryText="ECG - II"/>
+                    <MenuItem value="PPG" primaryText="PPG"/>
+                    <MenuItem value="RBBB" primaryText="RBBB"/>
                   </SelectField>
                 </ListItem>
                 <ListItem>
                   <div>Color</div>
                   <SelectField
                     floatingLabelText="Color Display"
-                    value={this.state.value}
-                    onChange={this.handleChange}
+                    value={colorValue}
+                    onChange={this.handleColorChange}
                   >
-                    <MenuItem value={1} primaryText="Never"/>
-                    <MenuItem value={2} primaryText="Every Night"/>
-                    <MenuItem value={3} primaryText="Weeknights"/>
+                    <MenuItem value="green" primaryText="Green"/>
+                    <MenuItem value="purple" primaryText="Purple"/>
+                    <MenuItem value="yellow" primaryText="Yellow"/>
                   </SelectField>
                 </ListItem>
               </List>
@@ -333,34 +427,35 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
                     <div>Scale</div>
                     <Slider
                       min={0}
-                      max={100}
-                      step={5}
-                      defaultValue={50}
-                      value={this.state.secondSlider}
-                      onChange={this.handleSecondSlider}
+                      max={2}
+                      step={0.05}
+                      defaultValue={scaleValue}
+                      value={scaleValue}
+                      onChange={this.handleScaleChange}
                     />
+                    <div style={{'textAlign': 'center'}}>{scaleValue}</div>
                   </ListItem>
 
                   <ListItem>
                     <div>Speed</div>
                     <Slider
                       min={0}
-                      max={100}
-                      step={10}
-                      defaultValue={50}
-                      value={this.state.secondSlider}
-                      onChange={this.handleSecondSlider}
+                      max={10}
+                      step={0.5}
+                      defaultValue={speedValue}
+                      value={speedValue}
+                      onChange={this.handleSpeedChange}
                     />
+                    <div style={{'textAlign': 'center'}}>{speedValue}</div>
                   </ListItem>
                 </div>
               </List>
               <Divider />
-              <MenuItem onTouchTap={this.handleClose}>Finish</MenuItem>
-              <MenuItem onTouchTap={this.handleClose}>Reset</MenuItem>
+              <MenuItem onTouchTap={this.handleLeftDrawerClose}>Save</MenuItem>
             </Drawer>
           </Col >
 
-          <Col lg={4} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
+          <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
             <ReactGridLayout
               layout={layout2}
               cols={12}
@@ -385,6 +480,66 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
         </Row>
       </Grid>
     );
+
+    var playMode = (
+      <Grid fluid={true}>
+        <Row>
+          <Col lg={9} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
+            <ReactGridLayout
+              layout={layout1}
+              cols={12}
+              rowHeight={200}
+              isDraggable={false}
+              isResizable={false}
+              onLayoutChange={this.onLayoutChange1}
+              onResizeStop={this.onResizeStop1}>
+
+              {this.state.layout1.map(this.createPlayElement1)}
+
+            </ReactGridLayout>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'row wrap',
+              justifyContent: 'flex-end'
+            }}
+            >
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={this.onPlay1}>
+                <FontIcon className="material-icons">
+                  play_arrow
+                </FontIcon>
+              </FloatingActionButton>
+            </div>
+          </Col >
+
+          <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
+            <ReactGridLayout
+              layout={layout2}
+              cols={12}
+              rowHeight={200}
+              onLayoutChange={this.onLayoutChange2}>
+
+              {this.state.layout2.map(this.createElement2)}
+
+            </ReactGridLayout>
+            <div>
+              <button onClick={this.resetLayout2} style={{color: 'red'}}>reset</button>
+            </div>
+            <div>
+              <button onClick={this.onAddItem2} style={{color: 'red'}}>add</button>
+            </div>
+          </Col>
+        </Row>
+        <Row>
+          <Col lg={12} style={{height: '5vh', background: grey700}}>
+
+          </Col>
+        </Row>
+      </Grid>
+    );
+
+    return play ? playMode : customMode;
   }
 
   static getFromLS = (key) => {
@@ -417,11 +572,11 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   ];
 
   static initialItems1 = () => ({
-      waveform: 'RBBB',
-      strokeStyle: 'yellow',
-      scale: 0.8,
-      speed: 3,
-      lineWidth: 3
+    waveform: 'ECG - II',
+    strokeStyle: 'green',
+    scale: 0.7,
+    speed: 3,
+    lineWidth: 3
   });
 
   static initialItem2 = () => [

@@ -14,7 +14,7 @@ import Dimensions from 'react-dimensions'
 import {Grid, Row, Col} from 'react-bootstrap';
 
 var data = {
-  'ECG-II': [
+  'ECG - II': [
     0, 0, 0, 0, 0.0000050048828125, 0.0000137939453125, 0.000049560546875, 0.00008740234375, 0.00015966796875,
     0.000262451171875, 0.0003975830078125, 0.0005687255859375, 0.0007802734375, 0.001037353515625,
     0.0013468017578125, 0.00172119140625, 0.0021756591796875, 0.0027232666015625, 0.0033880615234375,
@@ -106,6 +106,8 @@ class ECG extends React.Component { // eslint-disable-line react/prefer-stateles
       });
 
     }, 1800);
+
+    global.dispatchEvent(new Event('resize'));
   }
 
   componentDidUpdate() {
