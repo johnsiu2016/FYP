@@ -44,6 +44,8 @@ import SelectField from 'material-ui/SelectField';
 
 import Drawer from 'material-ui/Drawer';
 
+import VitalSign from 'components/VitalSign';
+
 var color = {
   'green': '#00bd00',
   'purple': '#CC00FF',
@@ -72,7 +74,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       play: false
     };
 
-    this.shouldResize = false;
+    this.shouldResize1 = false;
+    this.shouldResize2 = false;
   }
 
   onLayoutChange1 = (layout1) => {
@@ -96,7 +99,7 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       [i]: HomePage.initialItems1()
     };
 
-    this.shouldResize = true;
+    this.shouldResize1 = true;
     this.setState({
       layout1: tempLayout,
       items1: tempItems
@@ -110,7 +113,7 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   onResizeStop1 = () => {
-    this.shouldResize = true;
+    this.shouldResize1 = true;
     this.forceUpdate();
   };
 
@@ -223,8 +226,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       right: '0px',
       cursor: 'pointer'
     };
-    var resize = this.shouldResize;
-    this.shouldResize = false;
+    var resize = this.shouldResize1;
+    this.shouldResize1 = false;
 
     el = {
       ...el,
@@ -267,8 +270,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
   };
 
   createPlayElement1 = (el) => {
-    var resize = this.shouldResize;
-    this.shouldResize = false;
+    var resize = this.shouldResize1;
+    this.shouldResize1 = false;
 
     el = {
       ...el,
@@ -327,16 +330,28 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       top: 0,
       cursor: 'pointer'
     };
+
+    var resize = this.shouldResize2;
+
     return (
       <div key={el.i} data-grid={el}>
-        <MaterialCard/>
-        <FontIcon className="material-icons"
-                  style={removeStyle}
-                  onClick={this.onRemoveItem2.bind(this, el.i)}>
-          close
-        </FontIcon>
+        <div style={{height: '15%'}}>
+          <FontIcon className="material-icons"
+                    style={removeStyle}
+                    onClick={this.onRemoveItem2.bind(this, el.i)}>
+            close
+          </FontIcon>
+        </div>
+        <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
+          <VitalSign shouldResize={resize || false}/>
+        </Card>
       </div>
     )
+  };
+
+  onResizeStop2 = () => {
+    this.shouldResize2 = true;
+    this.forceUpdate();
   };
 
   render() {
@@ -463,7 +478,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
               layout={layout2}
               cols={12}
               rowHeight={200}
-              onLayoutChange={this.onLayoutChange2}>
+              onLayoutChange={this.onLayoutChange2}
+              onResizeStop={this.onResizeStop2}>
 
               {this.state.layout2.map(this.createElement2)}
 
@@ -521,7 +537,8 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
               layout={layout2}
               cols={12}
               rowHeight={200}
-              onLayoutChange={this.onLayoutChange2}>
+              onLayoutChange={this.onLayoutChange2}
+              onResizeStop={this.onResizeStop2}>
 
               {this.state.layout2.map(this.createElement2)}
 
