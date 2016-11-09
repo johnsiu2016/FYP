@@ -73,9 +73,6 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       },
       play: false
     };
-
-    this.shouldResize1 = false;
-    this.shouldResize2 = false;
   }
 
   onLayoutChange1 = (layout1) => {
@@ -86,11 +83,6 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
     });
   };
 
-  onLayoutChange2 = (layout2) => {
-    HomePage.saveToLS('layout2', layout2);
-    this.setState({layout2});
-  };
-
   resetLayout1 = () => {
     var i = uuid.v4();
     var tempLayout = HomePage.initialLayout1();
@@ -99,21 +91,13 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
       [i]: HomePage.initialItems1()
     };
 
-    this.shouldResize1 = true;
     this.setState({
       layout1: tempLayout,
       items1: tempItems
     });
   };
 
-  resetLayout2 = () => {
-    this.setState({
-      layout2: HomePage.initialItem2(),
-    });
-  };
-
   onResizeStop1 = () => {
-    this.shouldResize1 = true;
     this.forceUpdate();
   };
 
@@ -158,6 +142,144 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
     this.setState({
       play: !this.state.play
     });
+  };
+
+  createCustomElement1 = (el) => {
+    var removeStyle = {
+      position: 'absolute',
+      top: 0,
+      right: '0px',
+      cursor: 'pointer'
+    };
+
+    el = {
+      ...el,
+      ...this.state.items1[el.i]
+    };
+
+    return (
+      <div key={el.i} data-grid={el}>
+        <div style={{height: '15%'}}>
+          <span style={{
+            fontSize: '2em',
+            color: color[el.strokeStyle],
+            position: 'absolute',
+            left: '0px'
+          }}>{el.waveform}</span>
+
+          <FontIcon className="material-icons" style={{position: 'absolute', top: 0, right: '30px', cursor: 'pointer'}}
+                    onTouchTap={this.handleLeftDrawerToggle.bind(this, el.i)}>
+            build
+          </FontIcon>
+
+          <FontIcon style={removeStyle}
+                    className="material-icons"
+                    onClick={this.onRemoveItem1.bind(this, el.i)}>
+            close
+          </FontIcon>
+
+        </div>
+        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%'}}>
+          <ECG waveform={el.waveform}
+               strokeStyle={el.strokeStyle}
+               lineWidth={el.lineWidth}
+               scale={el.scale}
+               speed={el.speed}
+               showBuffer={true}/>
+        </Card>
+      </div>
+    )
+  };
+
+  createPlayElement1 = (el) => {
+    el = {
+      ...el,
+      ...this.state.items1[el.i]
+    };
+
+    return (
+      <div key={el.i} data-grid={el}>
+        <div style={{height: '15%'}}>
+          <span style={{
+            fontSize: '2em',
+            color: color[el.strokeStyle],
+            position: 'absolute',
+            left: '0px'
+          }}
+          >
+            {el.waveform}
+          </span>
+        </div>
+        <div style={{height: '85%', width: '100%'}}>
+          <ECG waveform={el.waveform}
+               strokeStyle={el.strokeStyle}
+               lineWidth={el.lineWidth}
+               scale={el.scale}
+               speed={el.speed}
+               showBuffer={false}/>
+        </div>
+      </div>
+    )
+  };
+
+  onLayoutChange2 = (layout2) => {
+    HomePage.saveToLS('layout2', layout2);
+    this.setState({layout2});
+  };
+
+  resetLayout2 = () => {
+    this.setState({
+      layout2: HomePage.initialItem2(),
+    });
+  };
+
+  onAddItem2 = () => {
+    this.setState({
+      layout2: [
+        ...this.state.layout2,
+        {
+          i: uuid.v4(),
+          x: 9,
+          y: Infinity, // puts it at the bottom
+          w: 12,
+          h: 1
+        }
+      ]
+    });
+  };
+
+  onRemoveItem2 = (i) => {
+    this.setState({layout2: this.state.layout2.filter((el) => el.i != i)});
+  };
+
+  createElement2 = (el) => {
+    var removeStyle = {
+      position: 'absolute',
+      right: '2px',
+      top: 0,
+      cursor: 'pointer'
+    };
+
+    var resize = this.shouldResize2;
+
+    return (
+      <div key={el.i} data-grid={el}>
+        <div style={{height: '15%'}}>
+          <FontIcon className="material-icons"
+                    style={removeStyle}
+                    onClick={this.onRemoveItem2.bind(this, el.i)}>
+            close
+          </FontIcon>
+        </div>
+        <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
+          <VitalSign shouldResize={resize || false}/>
+        </Card>
+      </div>
+    )
+  };
+
+  onResizeStop2 = () => {
+    this.forceUpdate();
   };
 
   handleLeftDrawerToggle = (i) => {
@@ -217,141 +339,6 @@ class HomePage extends React.Component { // eslint-disable-line react/prefer-sta
     this.setState({
       items1: temp
     });
-  };
-
-  createCustomElement1 = (el) => {
-    var removeStyle = {
-      position: 'absolute',
-      top: 0,
-      right: '0px',
-      cursor: 'pointer'
-    };
-    var resize = this.shouldResize1;
-    this.shouldResize1 = false;
-
-    el = {
-      ...el,
-      ...this.state.items1[el.i]
-    };
-
-    return (
-      <div key={el.i} data-grid={el}>
-        <div style={{height: '15%'}}>
-          <span style={{
-            fontSize: '2em',
-            color: color[el.strokeStyle],
-            position: 'absolute',
-            left: '0px'
-          }}>{el.waveform}</span>
-
-          <FontIcon className="material-icons" style={{position: 'absolute', top: 0, right: '30px', cursor: 'pointer'}}
-                    onTouchTap={this.handleLeftDrawerToggle.bind(this, el.i)}>
-            build
-          </FontIcon>
-
-          <FontIcon style={removeStyle}
-                    className="material-icons"
-                    onClick={this.onRemoveItem1.bind(this, el.i)}>
-            close
-          </FontIcon>
-
-        </div>
-        <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%'}}>
-          <ECG shouldResize={resize || false}
-               waveform={el.waveform}
-               strokeStyle={el.strokeStyle}
-               lineWidth={el.lineWidth}
-               scale={el.scale}
-               speed={el.speed}
-               showBuffer={true}/>
-        </Card>
-      </div>
-    )
-  };
-
-  createPlayElement1 = (el) => {
-    var resize = this.shouldResize1;
-    this.shouldResize1 = false;
-
-    el = {
-      ...el,
-      ...this.state.items1[el.i]
-    };
-
-    return (
-      <div key={el.i} data-grid={el}>
-        <div style={{height: '15%'}}>
-          <span style={{
-            fontSize: '2em',
-            color: color[el.strokeStyle],
-            position: 'absolute',
-            left: '0px'
-          }}
-          >
-            {el.waveform}
-          </span>
-        </div>
-        <div style={{height: '85%', width: '100%'}}>
-          <ECG shouldResize={resize || false}
-               waveform={el.waveform}
-               strokeStyle={el.strokeStyle}
-               lineWidth={el.lineWidth}
-               scale={el.scale}
-               speed={el.speed}
-               showBuffer={false}/>
-        </div>
-      </div>
-    )
-  };
-
-  onAddItem2 = () => {
-    this.setState({
-      layout2: [
-        ...this.state.layout2,
-        {
-          i: uuid.v4(),
-          x: 9,
-          y: Infinity, // puts it at the bottom
-          w: 12,
-          h: 1
-        }
-      ]
-    });
-  };
-
-  onRemoveItem2 = (i) => {
-    this.setState({layout2: this.state.layout2.filter((el) => el.i != i)});
-  };
-
-  createElement2 = (el) => {
-    var removeStyle = {
-      position: 'absolute',
-      right: '2px',
-      top: 0,
-      cursor: 'pointer'
-    };
-
-    var resize = this.shouldResize2;
-
-    return (
-      <div key={el.i} data-grid={el}>
-        <div style={{height: '15%'}}>
-          <FontIcon className="material-icons"
-                    style={removeStyle}
-                    onClick={this.onRemoveItem2.bind(this, el.i)}>
-            close
-          </FontIcon>
-        </div>
-        <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
-          <VitalSign shouldResize={resize || false}/>
-        </Card>
-      </div>
-    )
-  };
-
-  onResizeStop2 = () => {
-    this.shouldResize2 = true;
-    this.forceUpdate();
   };
 
   render() {
