@@ -16,27 +16,27 @@ const selectPatientMonitorPageDomain = () => state => state.get('patientMonitorP
 
 const selectLayout1 = () => createSelector(
   selectPatientMonitorPageDomain(),
-  (patientMonitorState) => substate.get('layout1').toJS()
+  (patientMonitorState) => patientMonitorState.get('layout1').toJS()
 );
 
 const selectItems1 = () => createSelector(
   selectPatientMonitorPageDomain(),
-  (patientMonitorState) => substate.get('layout1').toJS()
+  (patientMonitorState) => patientMonitorState.get('items1').toJS()
 );
 
 const selectLayout2 = () => createSelector(
   selectPatientMonitorPageDomain(),
-  (patientMonitorState) => substate.get('layout2').toJS()
+  (patientMonitorState) => patientMonitorState.get('layout2').toJS()
 );
 
 const selectLeftDrawer = () => createSelector(
   selectPatientMonitorPageDomain(),
-  (patientMonitorState) => substate.get('leftDrawer').toJS()
+  (patientMonitorState) => patientMonitorState.get('leftDrawer').toJS()
 );
 
 const selectPlay = () => createSelector(
   selectPatientMonitorPageDomain(),
-  (patientMonitorState) => substate.get('play').toJS()
+  (patientMonitorState) => patientMonitorState.get('play')
 );
 
 export {

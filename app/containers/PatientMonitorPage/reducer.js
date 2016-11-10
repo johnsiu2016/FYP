@@ -28,16 +28,16 @@ import {
 
 var initL1T1 = initialLayout1AndItem1();
 
-const initialState = JSON.parse(JSON.stringify(getFromLS('PatientMonitorPage'))) || fromJS({
+const initialState = JSON.parse(JSON.stringify(getFromLS('patientMonitorPage'))) || fromJS({
     layout1: initL1T1.layout1,
     items1: initL1T1.items1,
-    layout2: {
+    layout2: [{
       i: uuid.v4(),
       x: 0,
       y: 0,
       w: 12,
       h: 1
-    },
+    }],
     leftDrawer: {
       i: '',
       open: false
@@ -70,7 +70,7 @@ function patientMonitorPageReducer(state = initialState, action) {
 
 
     case CHANGE_LAYOUT2:
-      return state.set('layout2', action.layout1);
+      return state.set('layout2', fromJS(action.layout2));
 
     case RESET_LAYOUT2:
       return state.set('layout2', {
@@ -117,7 +117,7 @@ function patientMonitorPageReducer(state = initialState, action) {
   }
 }
 
-getFromLS = (key) => {
+function getFromLS(key) {
   if (localStorage) {
     try {
       return JSON.parse(localStorage.getItem(key)) || null;
@@ -125,9 +125,9 @@ getFromLS = (key) => {
       console.log(e);
     }
   }
-};
+}
 
-initialLayout1AndItem1 = () => {
+function  initialLayout1AndItem1() {
   var i = uuid.v4();
   return {
     layout1: [
@@ -149,6 +149,6 @@ initialLayout1AndItem1 = () => {
       }
     }
   }
-};
+}
 
 export default patientMonitorPageReducer;

@@ -213,6 +213,13 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
       play
     } = this.props;
 
+    var l = console.log;
+    l('test1', layout1);
+    l('test2', items1);
+    l('test3', layout2);
+    l('test4', leftDrawer);
+    l('test5', play);
+
     var waveformValue = items1[leftDrawer.i] ? items1[leftDrawer.i].waveform : "ECG - II";
     var colorValue = items1[leftDrawer.i] ? items1[leftDrawer.i].strokeStyle : "green";
     var scaleValue = items1[leftDrawer.i] ? items1[leftDrawer.i].scale : 0.8;
