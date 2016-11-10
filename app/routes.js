@@ -34,6 +34,24 @@ export default function createRoutes(store) {
         importModules.catch(errorLoading);
       },
     }, {
+      path: '/patientMonitor',
+      name: 'patientMonitorPage',
+      getComponent(nextState, cb) {
+        const importModules = Promise.all([
+          System.import('containers/PatientMonitorPage/reducer'),
+          System.import('containers/PatientMonitorPage'),
+        ]);
+
+        const renderRoute = loadModule(cb);
+
+        importModules.then(([reducer, component]) => {
+          injectReducer('patientMonitorPage', reducer.default);
+          renderRoute(component);
+        });
+
+        importModules.catch(errorLoading);
+      },
+    }, {
       path: '*',
       name: 'notfound',
       getComponent(nextState, cb) {

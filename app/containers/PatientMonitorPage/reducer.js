@@ -31,17 +31,17 @@ var initL1T1 = initialLayout1AndItem1();
 const initialState = JSON.parse(JSON.stringify(getFromLS('PatientMonitorPage'))) || fromJS({
     layout1: initL1T1.layout1,
     items1: initL1T1.items1,
-    layout2: fromJS({
+    layout2: {
       i: uuid.v4(),
       x: 0,
       y: 0,
       w: 12,
       h: 1
-    }),
-    leftDrawer: fromJS({
+    },
+    leftDrawer: {
       i: '',
       open: false
-    }),
+    },
     play: false
   });
 
@@ -130,24 +130,24 @@ getFromLS = (key) => {
 initialLayout1AndItem1 = () => {
   var i = uuid.v4();
   return {
-    layout1: fromJS([
-      fromJS({
+    layout1: [
+      {
         i: i,
         x: 0,
         y: 0,
         w: 12,
         h: 1
-      })
-    ]),
-    items1: fromJS({
-      [i]: fromJS({
+      }
+    ],
+    items1: {
+      [i]: {
         waveform: 'ECG - II',
         strokeStyle: 'green',
         scale: 0.7,
         speed: 3,
         lineWidth: 3
-      })
-    })
+      }
+    }
   }
 };
 

@@ -3,7 +3,6 @@
  * PatientMonitorPage actions
  *
  */
-import {fromJS} from 'immutable';
 import uuid from 'node-uuid';
 
 import {
@@ -49,24 +48,24 @@ export function addItem1() {
   var i = uuid.v4();
   return {
     type: ADD_ITEM1,
-    layout1: fromJS([
-      fromJS({
+    layout1: [
+      {
         i: i,
         x: 0,
         y: Infinity, // puts it at the bottom
         w: 12,
         h: 1
-      })
-    ]),
-    items1: fromJS({
-      [i]: fromJS({
+      }
+    ],
+    items1: {
+      [i]: {
         waveform: 'ECG - II',
         strokeStyle: 'green',
         scale: 0.7,
         speed: 3,
         lineWidth: 3
-      })
-    })
+      }
+    }
   }
 }
 
@@ -93,15 +92,15 @@ export function resetLayout2() {
 export function addItem2() {
   return {
     type: ADD_ITEM2,
-    layout2: fromJS([
-      fromJS({
+    layout2: [
+      {
         i: uuid.v4(),
         x: 9,
         y: Infinity, // puts it at the bottom
         w: 12,
         h: 1
-      })
-    ])
+      }
+    ]
   }
 }
 

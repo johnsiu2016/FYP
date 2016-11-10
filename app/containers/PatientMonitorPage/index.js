@@ -41,6 +41,8 @@ import Drawer from 'material-ui/Drawer';
 
 import VitalSign from 'components/VitalSign';
 
+import {createStructuredSelector} from 'reselect';
+
 import {
   changeLayout1,
   changeItems1,
@@ -63,7 +65,13 @@ import {
   handleSpeedChange
 } from './actions';
 
-import selectPatientMonitorPageItems1 from 'containers/PatientMonitorPage/selectors';
+import {
+  selectLayout1,
+  selectItems1,
+  selectLayout2,
+  selectLeftDrawer,
+  selectPlay
+} from 'containers/PatientMonitorPage/selectors';
 
 var color = {
   'green': '#00bd00',
@@ -74,6 +82,7 @@ var color = {
 class PatientMonitorPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
   createCustomElement1 = (el) => {
     var {handleLeftDrawerToggle, onRemoveItem1, items1} = this.props;
+
     var removeStyle = {
       position: 'absolute',
       top: 0,
@@ -153,11 +162,9 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
     )
   };
 
-  onResizeStop1 = () => {
-    this.forceUpdate();
-  };
-
   createElement2 = (el) => {
+    var {onRemoveItem2} = this.props;
+
     var removeStyle = {
       position: 'absolute',
       right: '2px',
@@ -170,23 +177,41 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
         <div style={{height: '15%'}}>
           <FontIcon className="material-icons"
                     style={removeStyle}
-                    onClick={this.onRemoveItem2.bind(this, el.i)}>
+                    onClick={onRemoveItem2.bind(this, el.i)}>
             close
           </FontIcon>
         </div>
         <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
-          <VitalSign shouldResize={resize || false}/>
+          <VitalSign/>
         </Card>
       </div>
     )
   };
 
-  onResizeStop2 = () => {
-    this.forceUpdate();
-  };
 
   render() {
-    const {layout1, layout2, items1, leftDrawer, play} = this.state;
+    var {
+      onLayoutChange1,
+      onAddItem1,
+      onPlayMode,
+      onResetLayout1,
+      handleWaveformChange,
+      handleColorChange,
+      handleScaleChange,
+      handleSpeedChange,
+      handleLeftDrawerClose,
+      onLayoutChange2,
+      onResetLayout2,
+      onAddItem2
+    } = this.props;
+
+    var {
+      layout1,
+      items1,
+      layout2,
+      leftDrawer,
+      play
+    } = this.props;
 
     var waveformValue = items1[leftDrawer.i] ? items1[leftDrawer.i].waveform : "ECG - II";
     var colorValue = items1[leftDrawer.i] ? items1[leftDrawer.i].strokeStyle : "green";
@@ -201,10 +226,12 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
               layout={layout1}
               cols={12}
               rowHeight={200}
-              onLayoutChange={this.onLayoutChange1}
-              onResizeStop={this.onResizeStop1}>
+              onLayoutChange={onLayoutChange1}
+              onResizeStop={() => {
+                this.forceUpdate();
+              }}>
 
-              {this.state.layout1.map(this.createCustomElement1)}
+              {layout1.map(this.createCustomElement1)}
 
             </ReactGridLayout>
             <div style={{
@@ -215,21 +242,21 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
             >
               <FloatingActionButton
                 style={{marginLeft: '20px'}}
-                onClick={this.onResetLayout1}>
+                onClick={onResetLayout1}>
                 <FontIcon className="material-icons">
                   restore
                 </FontIcon>
               </FloatingActionButton>
               <FloatingActionButton
                 style={{marginLeft: '20px'}}
-                onClick={this.onAddItem1}>
+                onClick={onAddItem1}>
                 <FontIcon className="material-icons">
                   add
                 </FontIcon>
               </FloatingActionButton>
               <FloatingActionButton
                 style={{marginLeft: '20px'}}
-                onClick={this.onPlayMode}>
+                onClick={onPlayMode}>
                 <FontIcon className="material-icons">
                   play_arrow
                 </FontIcon>
@@ -237,7 +264,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
             </div>
             <Drawer
               width={300}
-              open={this.state.leftDrawer.open}
+              open={leftDrawer.open}
               openSecondary={true}
             >
               <List>
@@ -247,7 +274,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
                   <SelectField
                     floatingLabelText="WaveForm Type"
                     value={waveformValue}
-                    onChange={this.handleWaveformChange}
+                    onChange={handleWaveformChange}
                   >
                     <MenuItem value="ECG - II" primaryText="ECG - II"/>
                     <MenuItem value="PPG" primaryText="PPG"/>
@@ -260,7 +287,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
                   <SelectField
                     floatingLabelText="Color Display"
                     value={colorValue}
-                    onChange={this.handleColorChange}
+                    onChange={handleColorChange}
                   >
                     <MenuItem value="green" primaryText="Green"/>
                     <MenuItem value="purple" primaryText="Purple"/>
@@ -280,7 +307,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
                       step={0.05}
                       defaultValue={scaleValue}
                       value={scaleValue}
-                      onChange={this.handleScaleChange}
+                      onChange={handleScaleChange}
                     />
                     <div style={{'textAlign': 'center'}}>{scaleValue}</div>
                   </ListItem>
@@ -293,14 +320,14 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
                       step={0.5}
                       defaultValue={speedValue}
                       value={speedValue}
-                      onChange={this.handleSpeedChange}
+                      onChange={handleSpeedChange}
                     />
                     <div style={{'textAlign': 'center'}}>{speedValue}</div>
                   </ListItem>
                 </div>
               </List>
               <Divider />
-              <MenuItem onTouchTap={this.handleLeftDrawerClose}>Save</MenuItem>
+              <MenuItem onTouchTap={handleLeftDrawerClose}>Save</MenuItem>
             </Drawer>
           </Col >
 
@@ -309,17 +336,19 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
               layout={layout2}
               cols={12}
               rowHeight={200}
-              onLayoutChange={this.onLayoutChange2}
-              onResizeStop={this.onResizeStop2}>
+              onLayoutChange={onLayoutChange2}
+              onResizeStop={() => {
+                this.forceUpdate();
+              }}>
 
-              {this.state.layout2.map(this.createElement2)}
+              {layout2.map(this.createElement2)}
 
             </ReactGridLayout>
             <div>
-              <button onClick={this.onResetLayout2} style={{color: 'red'}}>reset</button>
+              <button onClick={onResetLayout2} style={{color: 'red'}}>reset</button>
             </div>
             <div>
-              <button onClick={this.addItem2} style={{color: 'red'}}>add</button>
+              <button onClick={onAddItem2} style={{color: 'red'}}>add</button>
             </div>
           </Col>
         </Row>
@@ -340,11 +369,9 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
               cols={12}
               rowHeight={200}
               isDraggable={false}
-              isResizable={false}
-              onLayoutChange={this.onLayoutChange1}
-              onResizeStop={this.onResizeStop1}>
+              isResizable={false}>
 
-              {this.state.layout1.map(this.createPlayElement1)}
+              {layout1.map(this.createPlayElement1)}
 
             </ReactGridLayout>
             <div style={{
@@ -355,7 +382,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
             >
               <FloatingActionButton
                 style={{marginLeft: '20px'}}
-                onClick={this.onPlayMode}>
+                onClick={onPlayMode}>
                 <FontIcon className="material-icons">
                   play_arrow
                 </FontIcon>
@@ -368,17 +395,19 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
               layout={layout2}
               cols={12}
               rowHeight={200}
-              onLayoutChange={this.onLayoutChange2}
-              onResizeStop={this.onResizeStop2}>
+              onLayoutChange={onLayoutChange2}
+              onResizeStop={() => {
+                this.forceUpdate();
+              }}>
 
-              {this.state.layout2.map(this.createElement2)}
+              {layout2.map(this.createElement2)}
 
             </ReactGridLayout>
             <div>
-              <button onClick={this.resetLayout2} style={{color: 'red'}}>reset</button>
+              <button onClick={onResetLayout2} style={{color: 'red'}}>reset</button>
             </div>
             <div>
-              <button onClick={this.onAddItem2} style={{color: 'red'}}>add</button>
+              <button onClick={onAddItem2} style={{color: 'red'}}>add</button>
             </div>
           </Col>
         </Row>
@@ -414,7 +443,13 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
   };
 }
 
-const mapStateToProps = selectPatientMonitorPageItems1();
+const mapStateToProps = createStructuredSelector({
+  layout1: selectLayout1(),
+  items1: selectItems1(),
+  layout2: selectLayout2(),
+  leftDrawer: selectLeftDrawer(),
+  play: selectPlay()
+});
 
 function mapDispatchToProps(dispatch) {
   return {
