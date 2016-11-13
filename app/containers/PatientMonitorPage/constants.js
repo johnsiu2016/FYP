@@ -5,7 +5,6 @@
  */
 
 export const CHANGE_LAYOUT1 = 'app/PatientMonitorPage/CHANGE_LAYOUT1';
-export const CHANGE_ITEMS1 = 'app/PatientMonitorPage/CHANGE_ITEM1';
 export const RESET_LAYOUT1 = 'app/PatientMonitorPage/RESET_LAYOUT1';
 export const ADD_ITEM1 = 'app/PatientMonitorPage/ADD_ITEM1';
 export const REMOVE_ITEM1 = 'app/PatientMonitorPage/REMOVE_ITEM1';

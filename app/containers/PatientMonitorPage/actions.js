@@ -7,7 +7,6 @@ import uuid from 'node-uuid';
 
 import {
   CHANGE_LAYOUT1,
-  CHANGE_ITEMS1,
   RESET_LAYOUT1,
   ADD_ITEM1,
   REMOVE_ITEM1,
@@ -28,13 +27,6 @@ export function changeLayout1(layout1) {
   return {
     type: CHANGE_LAYOUT1,
     layout1: layout1
-  };
-}
-
-export function changeItems1(items1) {
-  return {
-    type: CHANGE_ITEMS1,
-    items1: items1
   };
 }
 

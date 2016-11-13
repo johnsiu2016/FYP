@@ -23,8 +23,6 @@ import ECG from 'components/Ecg';
 
 import FontIcon from 'material-ui/FontIcon';
 
-import uuid from 'node-uuid';
-
 import FloatingActionButton from 'material-ui/FloatingActionButton';
 
 import MenuItem from 'material-ui/MenuItem';
@@ -45,7 +43,6 @@ import {createStructuredSelector} from 'reselect';
 
 import {
   changeLayout1,
-  changeItems1,
   resetLayout1,
   addItem1,
   removeItem1,
@@ -80,6 +77,7 @@ var color = {
 };
 
 class PatientMonitorPage extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  // waveform
   createCustomElement1 = (el) => {
     var {handleLeftDrawerToggle, onRemoveItem1, items1} = this.props;
 
@@ -90,39 +88,48 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
       cursor: 'pointer'
     };
 
-    el = {
-      ...el,
-      ...items1[el.i]
-    };
+    var i = el.get('i');
+    var item1 = items1.get(i);
+    var waveform = item1.get('waveform');
+    var strokeStyle = item1.get('strokeStyle');
+    var lineWidth = item1.get('lineWidth');
+    var scale = item1.get('scale');
+    var speed = item1.get('speed');
+
+    if (el.get('y') === null) {
+      el = el.set('y', Infinity);
+    }
 
     return (
-      <div key={el.i} data-grid={el}>
+      <div key={i} data-grid={el.toObject()}>
         <div style={{height: '15%'}}>
           <span style={{
             fontSize: '2em',
-            color: color[el.strokeStyle],
+            color: color[strokeStyle],
             position: 'absolute',
             left: '0px'
-          }}>{el.waveform}</span>
+          }}>
+            {waveform}
+          </span>
 
           <FontIcon className="material-icons" style={{position: 'absolute', top: 0, right: '30px', cursor: 'pointer'}}
-                    onTouchTap={handleLeftDrawerToggle.bind(this, el.i)}>
+                    onTouchTap={handleLeftDrawerToggle.bind(this, i)}>
             build
           </FontIcon>
 
           <FontIcon style={removeStyle}
                     className="material-icons"
-                    onClick={onRemoveItem1.bind(this, el.i)}>
+                    onClick={onRemoveItem1.bind(this, i)}>
             close
           </FontIcon>
 
         </div>
         <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%'}}>
-          <ECG waveform={el.waveform}
-               strokeStyle={el.strokeStyle}
-               lineWidth={el.lineWidth}
-               scale={el.scale}
-               speed={el.speed}
+          <ECG waveform={waveform}
+               strokeStyle={strokeStyle}
+               lineWidth={lineWidth}
+               scale={scale}
+               speed={speed}
                showBuffer={true}/>
         </Card>
       </div>
@@ -132,36 +139,44 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
   createPlayElement1 = (el) => {
     var {items1} = this.props;
 
-    el = {
-      ...el,
-      ...items1[el.i]
-    };
+    var i = el.get('i');
+    var item1 = items1.get(i);
+    var waveform = item1.get('waveform');
+    var strokeStyle = item1.get('strokeStyle');
+    var lineWidth = item1.get('lineWidth');
+    var scale = item1.get('scale');
+    var speed = item1.get('speed');
+
+    if (el.get('y') === null) {
+      el = el.set('y', Infinity);
+    }
 
     return (
-      <div key={el.i} data-grid={el}>
+      <div key={i} data-grid={el.toObject()}>
         <div style={{height: '15%'}}>
           <span style={{
             fontSize: '2em',
-            color: color[el.strokeStyle],
+            color: color[strokeStyle],
             position: 'absolute',
             left: '0px'
           }}
           >
-            {el.waveform}
+            {waveform}
           </span>
         </div>
         <div style={{height: '85%', width: '100%'}}>
-          <ECG waveform={el.waveform}
-               strokeStyle={el.strokeStyle}
-               lineWidth={el.lineWidth}
-               scale={el.scale}
-               speed={el.speed}
+          <ECG waveform={waveform}
+               strokeStyle={strokeStyle}
+               lineWidth={lineWidth}
+               scale={scale}
+               speed={speed}
                showBuffer={false}/>
         </div>
       </div>
     )
   };
 
+  // vital sign
   createElement2 = (el) => {
     var {onRemoveItem2} = this.props;
 
@@ -172,12 +187,14 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
       cursor: 'pointer'
     };
 
+    var i = el.get('i');
+
     return (
-      <div key={el.i} data-grid={el}>
+      <div key={i} data-grid={el.toObject()}>
         <div style={{height: '15%'}}>
           <FontIcon className="material-icons"
                     style={removeStyle}
-                    onClick={onRemoveItem2.bind(this, el.i)}>
+                    onClick={onRemoveItem2.bind(this, i)}>
             close
           </FontIcon>
         </div>
@@ -187,7 +204,6 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
       </div>
     )
   };
-
 
   render() {
     var {
@@ -213,24 +229,19 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
       play
     } = this.props;
 
-    var l = console.log;
-    l('test1', layout1);
-    l('test2', items1);
-    l('test3', layout2);
-    l('test4', leftDrawer);
-    l('test5', play);
-
-    var waveformValue = items1[leftDrawer.i] ? items1[leftDrawer.i].waveform : "ECG - II";
-    var colorValue = items1[leftDrawer.i] ? items1[leftDrawer.i].strokeStyle : "green";
-    var scaleValue = items1[leftDrawer.i] ? items1[leftDrawer.i].scale : 0.8;
-    var speedValue = items1[leftDrawer.i] ? items1[leftDrawer.i].speed : 3;
+    var i = leftDrawer.get('i');
+    var open = leftDrawer.get('open');
+    var item1 = items1.get(i);
+    var waveformValue = item1 ? item1.get('waveform') : "ECG - II";
+    var colorValue = item1 ? item1.get('strokeStyle') : "green";
+    var scaleValue = item1 ? item1.get('scale') : 0.8;
+    var speedValue = item1 ? item1.get('speed') : 3;
 
     var customMode = (
       <Grid fluid={true}>
         <Row>
           <Col lg={9} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
             <ReactGridLayout
-              layout={layout1}
               cols={12}
               rowHeight={200}
               onLayoutChange={onLayoutChange1}
@@ -241,6 +252,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
               {layout1.map(this.createCustomElement1)}
 
             </ReactGridLayout>
+
             <div style={{
               display: 'flex',
               flexFlow: 'row wrap',
@@ -269,78 +281,10 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
                 </FontIcon>
               </FloatingActionButton>
             </div>
-            <Drawer
-              width={300}
-              open={leftDrawer.open}
-              openSecondary={true}
-            >
-              <List>
-                <Subheader>WaveForm Type and Color</Subheader>
-                <ListItem>
-                  <div>WaveForm</div>
-                  <SelectField
-                    floatingLabelText="WaveForm Type"
-                    value={waveformValue}
-                    onChange={handleWaveformChange}
-                  >
-                    <MenuItem value="ECG - II" primaryText="ECG - II"/>
-                    <MenuItem value="PPG" primaryText="PPG"/>
-                    <MenuItem value="RBBB" primaryText="RBBB"/>
-                    <MenuItem value="Bigeminy" primaryText="Bigeminy"/>
-                  </SelectField>
-                </ListItem>
-                <ListItem>
-                  <div>Color</div>
-                  <SelectField
-                    floatingLabelText="Color Display"
-                    value={colorValue}
-                    onChange={handleColorChange}
-                  >
-                    <MenuItem value="green" primaryText="Green"/>
-                    <MenuItem value="purple" primaryText="Purple"/>
-                    <MenuItem value="yellow" primaryText="Yellow"/>
-                  </SelectField>
-                </ListItem>
-              </List>
-              <Divider />
-              <List>
-                <Subheader>Scale and Speed</Subheader>
-                <div>
-                  <ListItem>
-                    <div>Scale</div>
-                    <Slider
-                      min={0}
-                      max={2}
-                      step={0.05}
-                      defaultValue={scaleValue}
-                      value={scaleValue}
-                      onChange={handleScaleChange}
-                    />
-                    <div style={{'textAlign': 'center'}}>{scaleValue}</div>
-                  </ListItem>
-
-                  <ListItem>
-                    <div>Speed</div>
-                    <Slider
-                      min={0}
-                      max={10}
-                      step={0.5}
-                      defaultValue={speedValue}
-                      value={speedValue}
-                      onChange={handleSpeedChange}
-                    />
-                    <div style={{'textAlign': 'center'}}>{speedValue}</div>
-                  </ListItem>
-                </div>
-              </List>
-              <Divider />
-              <MenuItem onTouchTap={handleLeftDrawerClose}>Save</MenuItem>
-            </Drawer>
           </Col >
 
           <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
             <ReactGridLayout
-              layout={layout2}
               cols={12}
               rowHeight={200}
               onLayoutChange={onLayoutChange2}
@@ -351,6 +295,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
               {layout2.map(this.createElement2)}
 
             </ReactGridLayout>
+
             <div>
               <button onClick={onResetLayout2} style={{color: 'red'}}>reset</button>
             </div>
@@ -359,11 +304,84 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
             </div>
           </Col>
         </Row>
+
         <Row>
           <Col lg={12} style={{height: '5vh', background: grey700}}>
 
           </Col>
         </Row>
+
+        <Drawer
+          width={300}
+          open={open}
+          openSecondary={true}
+        >
+          <List>
+            <Subheader>WaveForm Type and Color</Subheader>
+            <ListItem>
+              <div>WaveForm</div>
+              <SelectField
+                floatingLabelText="WaveForm Type"
+                value={waveformValue}
+                onChange={handleWaveformChange}
+              >
+                <MenuItem value="ECG - II" primaryText="ECG - II"/>
+                <MenuItem value="PPG" primaryText="PPG"/>
+                <MenuItem value="RBBB" primaryText="RBBB"/>
+                <MenuItem value="Bigeminy" primaryText="Bigeminy"/>
+              </SelectField>
+            </ListItem>
+            <ListItem>
+              <div>Color</div>
+              <SelectField
+                floatingLabelText="Color Display"
+                value={colorValue}
+                onChange={handleColorChange}
+              >
+                <MenuItem value="green" primaryText="Green"/>
+                <MenuItem value="purple" primaryText="Purple"/>
+                <MenuItem value="yellow" primaryText="Yellow"/>
+              </SelectField>
+            </ListItem>
+          </List>
+          <Divider />
+          <List>
+            <Subheader>Scale and Speed</Subheader>
+            <div>
+              <ListItem>
+                <div>Scale</div>
+                <Slider
+                  min={0}
+                  max={2}
+                  step={0.05}
+                  defaultValue={scaleValue}
+                  value={scaleValue}
+                  onChange={handleScaleChange}
+                />
+                <div style={{'textAlign': 'center'}}>
+                  {scaleValue}
+                </div>
+              </ListItem>
+
+              <ListItem>
+                <div>Speed</div>
+                <Slider
+                  min={0}
+                  max={10}
+                  step={0.5}
+                  defaultValue={speedValue}
+                  value={speedValue}
+                  onChange={handleSpeedChange}
+                />
+                <div style={{'textAlign': 'center'}}>
+                  {speedValue}
+                </div>
+              </ListItem>
+            </div>
+          </List>
+          <Divider />
+          <MenuItem onTouchTap={handleLeftDrawerClose}>Save</MenuItem>
+        </Drawer>
       </Grid>
     );
 
@@ -372,7 +390,6 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
         <Row>
           <Col lg={9} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
             <ReactGridLayout
-              layout={layout1}
               cols={12}
               rowHeight={200}
               isDraggable={false}
@@ -399,7 +416,6 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
 
           <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
             <ReactGridLayout
-              layout={layout2}
               cols={12}
               rowHeight={200}
               onLayoutChange={onLayoutChange2}
@@ -425,29 +441,8 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
         </Row>
       </Grid>
     );
-
     return play ? playMode : customMode;
   }
-
-  static getFromLS = (key) => {
-    if (localStorage) {
-      try {
-        return JSON.parse(localStorage.getItem(key)) || null;
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
-
-  static saveToLS = (key, value) => {
-    if (localStorage) {
-      try {
-        localStorage.setItem(key, JSON.stringify(value));
-      } catch (e) {
-        console.log(e);
-      }
-    }
-  };
 }
 
 const mapStateToProps = createStructuredSelector({
@@ -468,7 +463,7 @@ function mapDispatchToProps(dispatch) {
     onLayoutChange2: (layout2) => dispatch(changeLayout2(layout2)),
     onResetLayout2: () => dispatch(resetLayout2()),
     onAddItem2: () => dispatch(addItem2()),
-    onRemoveItem2: (i) => dispatch(removeItem2()),
+    onRemoveItem2: (i) => dispatch(removeItem2(i)),
 
     onPlayMode: () => dispatch(playMode()),
 
@@ -476,8 +471,8 @@ function mapDispatchToProps(dispatch) {
     handleLeftDrawerClose: () => dispatch(handleLeftDrawerClose()),
     handleWaveformChange: (event, index, value) => dispatch(handleWaveformChange(value)),
     handleColorChange: (event, index, value) => dispatch(handleColorChange(value)),
-    handleScaleChange: (event, index, value) => dispatch(handleScaleChange(value)),
-    handleSpeedChange: (event, index, value) => dispatch(handleSpeedChange(value))
+    handleScaleChange: (event, value) => dispatch(handleScaleChange(value)),
+    handleSpeedChange: (event, value) => dispatch(handleSpeedChange(value))
   };
 }
 
