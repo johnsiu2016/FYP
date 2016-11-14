@@ -24,13 +24,25 @@ import getMuiTheme from 'material-ui/styles/getMuiTheme';
 import AppBar from 'material-ui/AppBar';
 // material-ui theme end
 
-import BottomNavBar from 'containers/BottomNavBar';
+import IconButton from 'material-ui/IconButton';
+import FontIcon from 'material-ui/FontIcon';
+
+import Drawer from 'material-ui/Drawer';
+import MenuItem from 'material-ui/MenuItem';
 
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
-
   static propTypes = {
     children: React.PropTypes.node,
   };
+
+  constructor(props) {
+    super(props);
+    this.state = {open: false};
+  }
+
+  handleToggle = () => this.setState({open: !this.state.open});
+
+  handleClose = () => this.setState({open: false});
 
   render() {
     return (
@@ -43,11 +55,32 @@ export default class App extends React.Component { // eslint-disable-line react/
               {name: 'description', content: 'A Patient Monitor application'},
             ]}
           />
-          <div className={styles.container}>
+
+          <div className={this.state.open ? styles.container : ''}>
+            <AppBar
+              style={this.state.open ? {display: 'none'}:{}}
+              title="Patient Monitor"
+              iconElementLeft={
+                <IconButton>
+                  <FontIcon className="material-icons"
+                            onClick={this.handleToggle}>
+                    menu
+                  </FontIcon>
+                </IconButton>
+              }/>
             {React.Children.toArray(this.props.children)}
           </div>
+
+          <Drawer
+            docked={false}
+            width={300}
+            open={this.state.open}
+            onRequestChange={(open) => this.setState({open})}
+          >
+            <MenuItem onTouchTap={this.handleClose}>Menu Item</MenuItem>
+            <MenuItem onTouchTap={this.handleClose}>Menu Item 2</MenuItem>
+          </Drawer>
         </div>
-      </MuiThemeProvider>
-    );
+      </MuiThemeProvider>)
   }
-}
+};
