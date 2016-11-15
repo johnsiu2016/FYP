@@ -46,9 +46,6 @@ import {
   resetLayout1,
   addItem1,
   removeItem1,
-
-  changeLayout2,
-  resetLayout2,
   addItem2,
   removeItem2,
 
@@ -65,7 +62,7 @@ import {
 import {
   selectLayout1,
   selectItems1,
-  selectLayout2,
+  selectItems2,
   selectLeftDrawer,
   selectPlay
 } from 'containers/PatientMonitorPage/selectors';
@@ -177,7 +174,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
   };
 
   // vital sign
-  createElement2 = (el) => {
+  createCustomElement2 = (el) => {
     var {onRemoveItem2} = this.props;
 
     var removeStyle = {
@@ -188,6 +185,10 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
     };
 
     var i = el.get('i');
+
+    if (el.get('y') === null) {
+      el = el.set('y', Infinity);
+    }
 
     return (
       <div key={i} data-grid={el.toObject()}>
@@ -205,6 +206,20 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
     )
   };
 
+  createPlayElement2 = (el) => {
+    var i = el.get('i');
+
+    if (el.get('y') === null) {
+      el = el.set('y', Infinity);
+    }
+
+    return (
+      <div key={i} data-grid={el.toObject()}>
+        <VitalSign/>
+      </div>
+    )
+  };
+
   render() {
     var {
       onLayoutChange1,
@@ -216,7 +231,6 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
       handleScaleChange,
       handleSpeedChange,
       handleLeftDrawerClose,
-      onLayoutChange2,
       onResetLayout2,
       onAddItem2
     } = this.props;
@@ -224,7 +238,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
     var {
       layout1,
       items1,
-      layout2,
+      items2,
       leftDrawer,
       play
     } = this.props;
@@ -240,7 +254,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
     var customMode = (
       <Grid fluid={true}>
         <Row>
-          <Col lg={9} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
+          <Col lg={12} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
             <ReactGridLayout
               cols={12}
               rowHeight={200}
@@ -249,7 +263,15 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
                 this.forceUpdate();
               }}>
 
-              {layout1.map(this.createCustomElement1)}
+              {
+                function() {
+                  var l1 = layout1.filter((el) => items1.get(el.get('i')))
+                    .map(this.createCustomElement1);
+                  var l2 = layout1.filter((el) => items2.get(el.get('i')))
+                    .map(this.createCustomElement2);
+                  return l1.concat(l2);
+                }.call(this)
+              }
 
             </ReactGridLayout>
 
@@ -280,29 +302,12 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
                   play_arrow
                 </FontIcon>
               </FloatingActionButton>
+
+              <div>
+                <button onClick={onAddItem2} style={{color: 'red'}}>add</button>
+              </div>
             </div>
           </Col >
-
-          <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
-            <ReactGridLayout
-              cols={12}
-              rowHeight={200}
-              onLayoutChange={onLayoutChange2}
-              onResizeStop={() => {
-                this.forceUpdate();
-              }}>
-
-              {layout2.map(this.createElement2)}
-
-            </ReactGridLayout>
-
-            <div>
-              <button onClick={onResetLayout2} style={{color: 'red'}}>reset</button>
-            </div>
-            <div>
-              <button onClick={onAddItem2} style={{color: 'red'}}>add</button>
-            </div>
-          </Col>
         </Row>
 
         <Row>
@@ -388,14 +393,22 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
     var playMode = (
       <Grid fluid={true}>
         <Row>
-          <Col lg={9} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
+          <Col lg={12} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
             <ReactGridLayout
               cols={12}
               rowHeight={200}
               isDraggable={false}
               isResizable={false}>
 
-              {layout1.map(this.createPlayElement1)}
+              {
+                function () {
+                  var l1 = layout1.filter((el) => items1.get(el.get('i')))
+                    .map(this.createPlayElement1);
+                  var l2 = layout1.filter((el) => items2.get(el.get('i')))
+                    .map(this.createPlayElement2);
+                  return l1.concat(l2);
+                }.call(this)
+              }
 
             </ReactGridLayout>
             <div style={{
@@ -414,25 +427,6 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
             </div>
           </Col >
 
-          <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
-            <ReactGridLayout
-              cols={12}
-              rowHeight={200}
-              onLayoutChange={onLayoutChange2}
-              onResizeStop={() => {
-                this.forceUpdate();
-              }}>
-
-              {layout2.map(this.createElement2)}
-
-            </ReactGridLayout>
-            <div>
-              <button onClick={onResetLayout2} style={{color: 'red'}}>reset</button>
-            </div>
-            <div>
-              <button onClick={onAddItem2} style={{color: 'red'}}>add</button>
-            </div>
-          </Col>
         </Row>
         <Row>
           <Col lg={12} style={{height: '5vh', background: grey700}}>
@@ -448,7 +442,7 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
 const mapStateToProps = createStructuredSelector({
   layout1: selectLayout1(),
   items1: selectItems1(),
-  layout2: selectLayout2(),
+  items2: selectItems2(),
   leftDrawer: selectLeftDrawer(),
   play: selectPlay()
 });
@@ -459,9 +453,6 @@ function mapDispatchToProps(dispatch) {
     onResetLayout1: () => dispatch(resetLayout1()),
     onAddItem1: () => dispatch(addItem1()),
     onRemoveItem1: (i) => dispatch(removeItem1(i)),
-
-    onLayoutChange2: (layout2) => dispatch(changeLayout2(layout2)),
-    onResetLayout2: () => dispatch(resetLayout2()),
     onAddItem2: () => dispatch(addItem2()),
     onRemoveItem2: (i) => dispatch(removeItem2(i)),
 

@@ -12,8 +12,6 @@ import {
   RESET_LAYOUT1,
   ADD_ITEM1,
   REMOVE_ITEM1,
-  CHANGE_LAYOUT2,
-  RESET_LAYOUT2,
   ADD_ITEM2,
   REMOVE_ITEM2,
   PLAY_MODE,
@@ -30,13 +28,7 @@ var initL1T1 = initialLayout1AndItem1();
 const initialState = fromJS(getFromLS('patientMonitorPage')) || fromJS({
     layout1: initL1T1.layout1,
     items1: initL1T1.items1,
-    layout2: [{
-      i: uuid.v4(),
-      x: 0,
-      y: 0,
-      w: 12,
-      h: 1
-    }],
+    items2: initL1T1.items2,
     leftDrawer: {
       i: '',
       open: false
@@ -57,7 +49,8 @@ function patientMonitorPageReducer(state = initialState, action) {
       let initL1T1 = initialLayout1AndItem1();
 
       return state.set('layout1', fromJS(initL1T1.layout1))
-        .set('items1', fromJS(initL1T1.items1));
+        .set('items1', fromJS(initL1T1.items1))
+        .set('items2', fromJS(initL1T1.items2));
 
     case ADD_ITEM1:
       return state.update('layout1', layout1 => layout1.concat(fromJS(action.layout1)))
@@ -67,27 +60,13 @@ function patientMonitorPageReducer(state = initialState, action) {
       return state.set('layout1', state.get('layout1').filter((el) => el.get('i') != action.i))
         .set('items1', state.get('items1').delete(action.i));
 
-
-    case CHANGE_LAYOUT2:
-      let layout2 = state.set('layout2', fromJS(action.layout2));
-
-      saveToLS('patientMonitorPage', layout2);
-      return layout2;
-
-    case RESET_LAYOUT2:
-      return state.set('layout2', fromJS([{
-        i: uuid.v4(),
-        x: 0,
-        y: 0,
-        w: 12,
-        h: 1
-      }]));
-
     case ADD_ITEM2:
-      return state.update('layout2', layout2 => layout2.concat(fromJS(action.layout2)));
+      return state.update('layout1', layout1 => layout1.concat(fromJS(action.layout1)))
+        .update('items2', items2 => items2.merge(action.items2));
 
     case REMOVE_ITEM2:
-      return state.set('layout2', state.get('layout2').filter((el) => el.get('i') != action.i));
+      return state.set('layout1', state.get('layout1').filter((el) => el.get('i') != action.i))
+        .set('items2', state.get('items2').delete(action.i));
 
 
     case PLAY_MODE:
@@ -143,24 +122,37 @@ function getFromLS(key) {
 }
 
 function  initialLayout1AndItem1() {
-  var i = uuid.v4();
+  var i1 = uuid.v4();
+  var i2 = uuid.v4();
   return {
     layout1: [
       {
-        i: i,
+        i: i1,
         x: 0,
         y: 0,
-        w: 12,
+        w: 10,
+        h: 1
+      },
+      {
+        i: i2,
+        x: 10,
+        y: 0,
+        w: 2,
         h: 1
       }
     ],
     items1: {
-      [i]: {
+      [i1]: {
         waveform: 'ECG - II',
         strokeStyle: 'green',
         scale: 0.7,
         speed: 3,
         lineWidth: 3
+      }
+    },
+    items2: {
+      [i2]: {
+        color: 'green'
       }
     }
   }

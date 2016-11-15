@@ -10,8 +10,6 @@ import {
   RESET_LAYOUT1,
   ADD_ITEM1,
   REMOVE_ITEM1,
-  CHANGE_LAYOUT2,
-  RESET_LAYOUT2,
   ADD_ITEM2,
   REMOVE_ITEM2,
   PLAY_MODE,
@@ -45,7 +43,7 @@ export function addItem1() {
         i: i,
         x: 0,
         y: Infinity, // puts it at the bottom
-        w: 12,
+        w: 10,
         h: 1
       }
     ],
@@ -68,31 +66,24 @@ export function removeItem1(i) {
   };
 }
 
-export function changeLayout2(layout2) {
-  return {
-    type: CHANGE_LAYOUT2,
-    layout2: layout2
-  };
-}
-
-export function resetLayout2() {
-  return {
-    type: RESET_LAYOUT2,
-  };
-}
-
 export function addItem2() {
+  var i = uuid.v4();
   return {
     type: ADD_ITEM2,
-    layout2: [
+    layout1: [
       {
-        i: uuid.v4(),
-        x: 9,
+        i: i,
+        x: 10,
         y: Infinity, // puts it at the bottom
-        w: 12,
+        w: 2,
         h: 1
       }
-    ]
+    ],
+    items2: {
+      [i]: {
+        color: 'green'
+      }
+    }
   }
 }
 

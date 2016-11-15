@@ -24,9 +24,9 @@ const selectItems1 = () => createSelector(
   (patientMonitorState) => patientMonitorState.get('items1')
 );
 
-const selectLayout2 = () => createSelector(
+const selectItems2 = () => createSelector(
   selectPatientMonitorPageDomain(),
-  (patientMonitorState) => patientMonitorState.get('layout2')
+  (patientMonitorState) => patientMonitorState.get('items2')
 );
 
 const selectLeftDrawer = () => createSelector(
@@ -43,7 +43,7 @@ export {
   selectPatientMonitorPageDomain,
   selectLayout1,
   selectItems1,
-  selectLayout2,
+  selectItems2,
   selectLeftDrawer,
   selectPlay
 };
