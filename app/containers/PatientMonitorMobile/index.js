@@ -188,6 +188,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
     };
 
     var i = el.get('i');
+    var w = el.get('w');
 
     return (
       <div key={i} data-grid={el.toObject()}>
@@ -199,7 +200,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
           </FontIcon>
         </div>
         <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
-          <VitalSign/>
+          <VitalSign w={w}/>
         </Card>
       </div>
     )
@@ -245,9 +246,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
               cols={12}
               rowHeight={200}
               onLayoutChange={onLayoutChange1}
-              onResizeStop={() => {
-                this.forceUpdate();
-              }}>
+              onResizeStop={() => this.forceUpdate()}>
 
               {layout1.map(this.createCustomElement1)}
 
@@ -288,9 +287,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
               cols={12}
               rowHeight={200}
               onLayoutChange={onLayoutChange2}
-              onResizeStop={() => {
-                this.forceUpdate();
-              }}>
+              onResizeStop={() => this.forceUpdate()}>
 
               {layout2.map(this.createElement2)}
 

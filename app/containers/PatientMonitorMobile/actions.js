@@ -1,6 +1,6 @@
 /*
  *
- * PatientMonitorPage actions
+ * PatientMonitorMobile actions
  *
  */
 import uuid from 'node-uuid';
@@ -90,7 +90,8 @@ export function addItem2() {
         x: 9,
         y: Infinity, // puts it at the bottom
         w: 12,
-        h: 1
+        h: 1,
+        minW: 6
       }
     ]
   }

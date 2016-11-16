@@ -1,6 +1,6 @@
 /*
  *
- * PatientMonitorPage reducer
+ * PatientMonitorMobile reducer
  *
  */
 
@@ -35,7 +35,8 @@ const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
       x: 0,
       y: 0,
       w: 12,
-      h: 1
+      h: 1,
+      minW: 6
     }],
     leftDrawer: {
       i: '',
@@ -80,7 +81,8 @@ function patientMonitorMobileReducer(state = initialState, action) {
         x: 0,
         y: 0,
         w: 12,
-        h: 1
+        h: 1,
+        minW: 6
       }]));
 
     case ADD_ITEM2:

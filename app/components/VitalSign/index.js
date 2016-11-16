@@ -19,7 +19,9 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
 
   render() {
     var l = console.log;
-    var {containerWidth, containerHeight} = this.props;
+    var {containerHeight, w} = this.props;
+    var scaleRatio = w/12;
+    var scaleContainerHeight = containerHeight * scaleRatio;
 
     return (
       <div style={{
@@ -30,21 +32,21 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
         color: '#00bd00'
       }}>
 
-        <div style={{flex: '0.3'}}>
+        <div style={{flex: '0.4'}}>
           <div style={{fontSize: '2em'}}>
             HR
           </div>
           <div style={{alignSelf: 'center'}}>
-            <div style={{fontSize: `${containerHeight*0.2}px`, lineHeight: `${containerHeight*0.2}px`, textAlign: 'center'}}>
+            <div style={{fontSize: `${scaleContainerHeight*0.2}px`, lineHeight: `${scaleContainerHeight*0.2}px`, textAlign: 'center'}}>
               120
             </div>
-            <div style={{fontSize: `${containerHeight*0.2}px`, lineHeight: `${containerHeight*0.2}px`, textAlign: 'center'}}>
+            <div style={{fontSize: `${scaleContainerHeight*0.2}px`, lineHeight: `${scaleContainerHeight*0.2}px`, textAlign: 'center'}}>
               50
             </div>
           </div>
         </div>
 
-        <div style={{flex: '0.7', fontSize: `${containerHeight*0.9}px`, lineHeight: `${containerHeight*0.9}px`}}>
+        <div style={{flex: '0.6', fontSize: `${scaleContainerHeight*0.9}px`, lineHeight: `${scaleContainerHeight*0.9}px`}}>
           90
         </div>
       </div>
