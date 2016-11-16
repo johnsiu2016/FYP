@@ -14,24 +14,12 @@ import styles from './styles.css';
 
 class VitalSign extends React.Component { // eslint-disable-line react/prefer-stateless-function
   componentDidUpdate() {
-
       global.dispatchEvent(new Event('resize'));
-
   }
 
   render() {
     var l = console.log;
     var {containerWidth, containerHeight} = this.props;
-
-    if (!this.firstWidth) {
-      this.firstWidth = containerWidth;
-    }
-
-    l(containerHeight);
-    l(containerWidth);
-    l(this.firstWidth);
-    var scale = containerHeight * containerWidth/this.firstWidth;
-    l(scale);
 
     return (
       <div style={{
@@ -47,16 +35,16 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
             HR
           </div>
           <div style={{alignSelf: 'center'}}>
-            <div style={{fontSize: `${scale*0.2}px`, lineHeight: `${scale*0.2}px`, textAlign: 'center'}}>
+            <div style={{fontSize: `${containerHeight*0.2}px`, lineHeight: `${containerHeight*0.2}px`, textAlign: 'center'}}>
               120
             </div>
-            <div style={{fontSize: `${scale*0.2}px`, lineHeight: `${scale*0.2}px`, textAlign: 'center'}}>
+            <div style={{fontSize: `${containerHeight*0.2}px`, lineHeight: `${containerHeight*0.2}px`, textAlign: 'center'}}>
               50
             </div>
           </div>
         </div>
 
-        <div style={{flex: '0.7', fontSize: `${scale*0.95}px`, lineHeight: `${scale*0.95}px`}}>
+        <div style={{flex: '0.7', fontSize: `${containerHeight*0.9}px`, lineHeight: `${containerHeight*0.9}px`}}>
           90
         </div>
       </div>

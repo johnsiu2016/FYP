@@ -215,7 +215,11 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
 
     return (
       <div key={i} data-grid={el.toObject()}>
-        <VitalSign/>
+        <div style={{height: '15%'}}>
+        </div>
+        <div style={{width: '100%', height: '85%'}}>
+          <VitalSign/>
+        </div>
       </div>
     )
   };
@@ -231,7 +235,6 @@ class PatientMonitorPage extends React.Component { // eslint-disable-line react/
       handleScaleChange,
       handleSpeedChange,
       handleLeftDrawerClose,
-      onResetLayout2,
       onAddItem2
     } = this.props;
 
