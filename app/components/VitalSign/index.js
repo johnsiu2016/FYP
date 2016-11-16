@@ -18,7 +18,6 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
   }
 
   render() {
-    var l = console.log;
     var {containerHeight, w} = this.props;
     var scaleRatio = w/12;
     var scaleContainerHeight = containerHeight * scaleRatio;

@@ -77,6 +77,14 @@ var color = {
 };
 
 class PatientMonitorMobile extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  componentDidMount() {
+    window.addEventListener("keyup", this.props.onPlayModeKeyUp);
+  }
+
+  componentWillUnmount() {
+    window.removeEventListener("keyup", this.props.onPlayModeKeyUp);
+  }
+
   // waveform
   createCustomElement1 = (el) => {
     var {handleLeftDrawerToggle, onRemoveItem1, items1} = this.props;
@@ -206,6 +214,21 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
     )
   };
 
+  createPlayElement2 = (el) => {
+    var i = el.get('i');
+    var w = el.get('w');
+
+    return (
+      <div key={i} data-grid={el.toObject()}>
+        <div style={{height: '15%'}}>
+        </div>
+        <div style={{width: '100%', height: '85%'}}>
+          <VitalSign w={w}/>
+        </div>
+      </div>
+    )
+  };
+
   render() {
     var {
       onLayoutChange1,
@@ -293,11 +316,26 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
 
             </ReactGridLayout>
 
-            <div>
-              <button onClick={onResetLayout2} style={{color: 'red'}}>reset</button>
-            </div>
-            <div>
-              <button onClick={onAddItem2} style={{color: 'red'}}>add</button>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'row wrap',
+              justifyContent: 'flex-end'
+            }}
+            >
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={onResetLayout2}>
+                <FontIcon className="material-icons">
+                  restore
+                </FontIcon>
+              </FloatingActionButton>
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={onAddItem2}>
+                <FontIcon className="material-icons">
+                  add
+                </FontIcon>
+              </FloatingActionButton>
             </div>
           </Col>
         </Row>
@@ -395,40 +433,18 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
               {layout1.map(this.createPlayElement1)}
 
             </ReactGridLayout>
-            <div style={{
-              display: 'flex',
-              flexFlow: 'row wrap',
-              justifyContent: 'flex-end'
-            }}
-            >
-              <FloatingActionButton
-                style={{marginLeft: '20px'}}
-                onClick={onPlayMode}>
-                <FontIcon className="material-icons">
-                  play_arrow
-                </FontIcon>
-              </FloatingActionButton>
-            </div>
           </Col >
 
-          <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey800}}>
+          <Col lg={3} style={{height: '95vh', overflowY: 'auto', background: grey900}}>
             <ReactGridLayout
               cols={12}
               rowHeight={200}
-              onLayoutChange={onLayoutChange2}
-              onResizeStop={() => {
-                this.forceUpdate();
-              }}>
+              isDraggable={false}
+              isResizable={false}>
 
-              {layout2.map(this.createElement2)}
+              {layout2.map(this.createPlayElement2)}
 
             </ReactGridLayout>
-            <div>
-              <button onClick={onResetLayout2} style={{color: 'red'}}>reset</button>
-            </div>
-            <div>
-              <button onClick={onAddItem2} style={{color: 'red'}}>add</button>
-            </div>
           </Col>
         </Row>
         <Row>
@@ -463,6 +479,7 @@ function mapDispatchToProps(dispatch) {
     onRemoveItem2: (i) => dispatch(removeItem2(i)),
 
     onPlayMode: () => dispatch(playMode()),
+    onPlayModeKeyUp: (e) => e.keyCode === 27 ?dispatch(playMode()) : null,
 
     handleLeftDrawerToggle: (i) => dispatch(handleLeftDrawerToggle(i)),
     handleLeftDrawerClose: () => dispatch(handleLeftDrawerClose()),
