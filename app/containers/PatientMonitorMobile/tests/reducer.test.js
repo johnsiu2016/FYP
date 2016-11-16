@@ -1,9 +1,9 @@
 import expect from 'expect';
-import patientMonitorMobileReducer from '../reducer';
+import patientMonitorPageReducer from '../reducer';
 import { fromJS } from 'immutable';
 
-describe('patientMonitorMobileReducer', () => {
+describe('patientMonitorPageReducer', () => {
   it('returns the initial state', () => {
-    expect(patientMonitorMobileReducer(undefined, {})).toEqual(fromJS({}));
+    expect(patientMonitorPageReducer(undefined, {})).toEqual(fromJS({}));
   });
 });

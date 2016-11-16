@@ -1,10 +1,10 @@
-// import { selectPatientMonitorMobileDomain } from '../selectors';
+// import { selectPatientMonitorPageDomain } from '../selectors';
 // import { fromJS } from 'immutable';
 import expect from 'expect';
 
-// const selector = selectPatientMonitorMobileDomain();
+// const selector = selectPatientMonitorPageDomain();
 
-describe('selectPatientMonitorMobileDomain', () => {
+describe('selectPatientMonitorPageDomain', () => {
   it('Expect to have unit tests specified', () => {
     expect('Test case').toEqual(false);
   });

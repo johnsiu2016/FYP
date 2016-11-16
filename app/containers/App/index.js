@@ -30,6 +30,8 @@ import FontIcon from 'material-ui/FontIcon';
 import Drawer from 'material-ui/Drawer';
 import MenuItem from 'material-ui/MenuItem';
 
+import {Link} from 'react-router';
+
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
   static propTypes = {
     children: React.PropTypes.node,
@@ -77,8 +79,8 @@ export default class App extends React.Component { // eslint-disable-line react/
             open={this.state.open}
             onRequestChange={(open) => this.setState({open})}
           >
-            <MenuItem onTouchTap={this.handleClose}>Menu Item</MenuItem>
-            <MenuItem onTouchTap={this.handleClose}>Menu Item 2</MenuItem>
+            <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitor">Patient Monitor Desktop</Link></MenuItem>
+            <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitorMobile">Patient Monitor Mobile</Link></MenuItem>
           </Drawer>
         </div>
       </MuiThemeProvider>)
