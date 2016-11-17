@@ -266,85 +266,81 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
     var customMode = (
       <Grid fluid={true}>
         <Row>
-          <Col lg={9} style={{height: '95vh', background: grey900}}>
-            <Scrollbars
-              autoHide>
-              <ReactGridLayout
-                cols={12}
-                rowHeight={200}
-                onLayoutChange={onLayoutChange1}
-                onResizeStop={() => this.forceUpdate()}>
+          <Col lg={9} style={{height: '95vh', background: grey900, overflow: 'auto'}}
+               className={styles.patientMonitorMobile}>
+            <ReactGridLayout
+              cols={12}
+              rowHeight={200}
+              onLayoutChange={onLayoutChange1}
+              onResizeStop={() => this.forceUpdate()}>
 
-                {layout1.map(this.createCustomElement1)}
+              {layout1.map(this.createCustomElement1)}
 
-              </ReactGridLayout>
+            </ReactGridLayout>
 
-              <div style={{
-                display: 'flex',
-                flexFlow: 'row wrap',
-                justifyContent: 'flex-end'
-              }}
-              >
-                <FloatingActionButton
-                  style={{marginLeft: '20px'}}
-                  onClick={onResetLayout1}>
-                  <FontIcon className="material-icons">
-                    restore
-                  </FontIcon>
-                </FloatingActionButton>
-                <FloatingActionButton
-                  style={{marginLeft: '20px'}}
-                  onClick={onAddItem1}>
-                  <FontIcon className="material-icons">
-                    add
-                  </FontIcon>
-                </FloatingActionButton>
-                <FloatingActionButton
-                  style={{marginLeft: '20px'}}
-                  onClick={onPlayMode}>
-                  <FontIcon className="material-icons">
-                    play_arrow
-                  </FontIcon>
-                </FloatingActionButton>
-              </div>
-            </Scrollbars>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'row wrap',
+              justifyContent: 'flex-end'
+            }}
+            >
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={onResetLayout1}>
+                <FontIcon className="material-icons">
+                  restore
+                </FontIcon>
+              </FloatingActionButton>
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={onAddItem1}>
+                <FontIcon className="material-icons">
+                  add
+                </FontIcon>
+              </FloatingActionButton>
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={onPlayMode}>
+                <FontIcon className="material-icons">
+                  play_arrow
+                </FontIcon>
+              </FloatingActionButton>
+            </div>
           </Col >
 
-          <Col lg={3} style={{height: '95vh', background: grey800}}>
-            <Scrollbars
-              autoHide>
-              <ReactGridLayout
-                cols={12}
-                rowHeight={200}
-                onLayoutChange={onLayoutChange2}
-                onResizeStop={() => this.forceUpdate()}>
+          <Col lg={3} style={{height: '95vh', background: grey800, overflow: 'auto'}}
+               className={styles.patientMonitorMobile}>
+            <ReactGridLayout
+              cols={12}
+              rowHeight={200}
+              onLayoutChange={onLayoutChange2}
+              onResizeStop={() => this.forceUpdate()}>
 
-                {layout2.map(this.createElement2)}
+              {layout2.map(this.createElement2)}
 
-              </ReactGridLayout>
+            </ReactGridLayout>
 
-              <div style={{
-                display: 'flex',
-                flexFlow: 'row wrap',
-                justifyContent: 'flex-end'
-              }}
-              >
-                <FloatingActionButton
-                  style={{marginLeft: '20px'}}
-                  onClick={onResetLayout2}>
-                  <FontIcon className="material-icons">
-                    restore
-                  </FontIcon>
-                </FloatingActionButton>
-                <FloatingActionButton
-                  style={{marginLeft: '20px'}}
-                  onClick={onAddItem2}>
-                  <FontIcon className="material-icons">
-                    add
-                  </FontIcon>
-                </FloatingActionButton>
-              </div>
-            </Scrollbars>
+            <div style={{
+              display: 'flex',
+              flexFlow: 'row wrap',
+              justifyContent: 'flex-end'
+            }}
+            >
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={onResetLayout2}>
+                <FontIcon className="material-icons">
+                  restore
+                </FontIcon>
+              </FloatingActionButton>
+              <FloatingActionButton
+                style={{marginLeft: '20px'}}
+                onClick={onAddItem2}>
+                <FontIcon className="material-icons">
+                  add
+                </FontIcon>
+              </FloatingActionButton>
+            </div>
           </Col>
         </Row>
 
@@ -431,33 +427,29 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
     var playMode = (
       <Grid fluid={true}>
         <Row>
-          <Col lg={9} style={{height: '95vh', background: grey900}}>
-            <Scrollbars
-              autoHide>
-              <ReactGridLayout
-                cols={12}
-                rowHeight={200}
-                isDraggable={false}
-                isResizable={false}>
+          <Col lg={9} style={{height: '95vh', background: grey900, overflow: 'auto'}} className={styles.patientMonitorMobile}>
 
-                {layout1.map(this.createPlayElement1)}
+            <ReactGridLayout
+              cols={12}
+              rowHeight={200}
+              isDraggable={false}
+              isResizable={false}>
 
-              </ReactGridLayout>
-            </Scrollbars>
+              {layout1.map(this.createPlayElement1)}
+
+            </ReactGridLayout>
           </Col >
 
-          <Col lg={3} style={{height: '95vh', background: grey900}}>
-            <Scrollbars>
-              <ReactGridLayout
-                cols={12}
-                rowHeight={200}
-                isDraggable={false}
-                isResizable={false}>
+          <Col lg={3} style={{height: '95vh', background: grey900, overflow: 'auto'}} className={styles.patientMonitorMobile}>
+            <ReactGridLayout
+              cols={12}
+              rowHeight={200}
+              isDraggable={false}
+              isResizable={false}>
 
-                {layout2.map(this.createPlayElement2)}
+              {layout2.map(this.createPlayElement2)}
 
-              </ReactGridLayout>
-            </Scrollbars>
+            </ReactGridLayout>
           </Col>
         </Row>
         <Row>
