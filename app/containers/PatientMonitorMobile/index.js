@@ -357,7 +357,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
               onLayoutChange={onLayoutChange2}
               onResizeStop={() => this.forceUpdate()}>
 
-              {layout2.map(this.createElement2)}
+              {layout2.map(this.createCustomElement2)}
 
             </ReactGridLayout>
 
