@@ -1,6 +1,6 @@
 /*
  *
- * PatientMonitorPage
+ * PatientMonitorMobile
  *
  */
 
