@@ -33,6 +33,7 @@ import MenuItem from 'material-ui/MenuItem';
 import {Link} from 'react-router';
 
 import {Card, CardActions, CardHeader, CardMedia, CardTitle, CardText} from 'material-ui/Card';
+import Subheader from 'material-ui/Subheader';
 import FlatButton from 'material-ui/FlatButton';
 
 export default class App extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -84,29 +85,18 @@ export default class App extends React.Component { // eslint-disable-line react/
           >
             <Card>
               <CardHeader
-                title="URL Avatar"
-                subtitle="Subtitle"
-                avatar="images/jsa-128.jpg"
+                title="Patient Monitor"
+                subtitle="Anytime, Everywhere"
+                avatar="https://cdn0.iconfinder.com/data/icons/health-icons/110/Patient-Monitor-512.png"
               />
-              <CardMedia
-                overlay={<CardTitle title="Overlay title" subtitle="Overlay subtitle" />}
-              >
+              <CardMedia>
                 <img src="http://www.ampronix.com/media/catalog/product/cache/1/image/9df78eab33525d08d6e5fb8d27136e95/m/x/mx600_mx700_gallery7_1.jpg" />
               </CardMedia>
-              <CardTitle title="Card title" subtitle="Card subtitle" />
-              <CardText>
-                Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-                Donec mattis pretium massa. Aliquam erat volutpat. Nulla facilisi.
-                Donec vulputate interdum sollicitudin. Nunc lacinia auctor quam sed pellentesque.
-                Aliquam dui mauris, mattis quis lacus id, pellentesque lobortis odio.
-              </CardText>
-              <CardActions>
-                <FlatButton label="Action1" />
-                <FlatButton label="Action2" />
-              </CardActions>
             </Card>
+            <Subheader>Go To</Subheader>
             <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitor">Patient Monitor Desktop</Link></MenuItem>
             <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitorMobile">Patient Monitor Mobile</Link></MenuItem>
+            <MenuItem onTouchTap={this.handleClose}><Link to="/settings">Settings</Link></MenuItem>
           </Drawer>
         </div>
       </MuiThemeProvider>)
