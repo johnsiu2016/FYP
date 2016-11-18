@@ -7,7 +7,6 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import Helmet from 'react-helmet';
-import selectPatientMonitorPage from './selectors';
 import styles from './styles.css';
 
 import ReactGrid, {WidthProvider} from 'react-grid-layout';
@@ -61,21 +60,31 @@ import {
   handleWaveformChange,
   handleColorChange,
   handleScaleChange,
-  handleSpeedChange
+  handleSpeedChange,
+
+  handleRightDrawerToggle,
+  handleRightDrawerClose,
+  handleVitalSignChange,
+  handleVitalSignColorChange
 } from './actions';
 
 import {
   selectLayout1,
   selectItems1,
   selectLayout2,
+  selectItems2,
   selectLeftDrawer,
+  selectRightDrawer,
   selectPlay
 } from './selectors';
 
 var color = {
   'green': '#00bd00',
   'purple': '#CC00FF',
-  'yellow': '#FFFF00'
+  'yellow': '#FFFF00',
+  'white': '#FFFFFF',
+  'red': '#FC0203',
+  'blue': '#03FDFB',
 };
 
 class PatientMonitorMobile extends React.Component { // eslint-disable-line react/prefer-stateless-function
@@ -187,8 +196,8 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
   };
 
   // vital sign
-  createElement2 = (el) => {
-    var {onRemoveItem2} = this.props;
+  createCustomElement2 = (el) => {
+    var {onRemoveItem2, handleRightDrawerToggle, items2} = this.props;
 
     var removeStyle = {
       position: 'absolute',
@@ -198,11 +207,20 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
     };
 
     var i = el.get('i');
+    var item2 = items2.get(i);
+    var vitalSign = item2.get('vitalSign');
+    var strokeStyle = item2.get('strokeStyle');
+
     var w = el.get('w');
 
     return (
       <div key={i} data-grid={el.toObject()}>
         <div style={{height: '15%'}}>
+          <FontIcon className="material-icons" style={{position: 'absolute', top: 0, right: '30px', cursor: 'pointer'}}
+                    onTouchTap={handleRightDrawerToggle.bind(this, i)}>
+            build
+          </FontIcon>
+
           <FontIcon className="material-icons"
                     style={removeStyle}
                     onClick={onRemoveItem2.bind(this, i)}>
@@ -210,14 +228,23 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
           </FontIcon>
         </div>
         <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
-          <VitalSign w={w}/>
+          <VitalSign
+            vitalSign={vitalSign}
+            strokeStyle={strokeStyle}
+            w={w}/>
         </Card>
       </div>
     )
   };
 
   createPlayElement2 = (el) => {
+    var {items2} = this.props;
+
     var i = el.get('i');
+    var item2 = items2.get(i);
+    var vitalSign = item2.get('vitalSign');
+    var strokeStyle = item2.get('strokeStyle');
+
     var w = el.get('w');
 
     return (
@@ -225,7 +252,10 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
         <div style={{height: '15%'}}>
         </div>
         <div style={{width: '100%', height: '85%'}}>
-          <VitalSign w={w}/>
+          <VitalSign
+            vitalSign={vitalSign}
+            strokeStyle={strokeStyle}
+            w={w}/>
         </div>
       </div>
     )
@@ -244,24 +274,35 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       handleLeftDrawerClose,
       onLayoutChange2,
       onResetLayout2,
-      onAddItem2
+      onAddItem2,
+      handleRightDrawerClose,
+      handleVitalSignChange,
+      handleVitalSignColorChange
     } = this.props;
 
     var {
       layout1,
       items1,
       layout2,
+      items2,
       leftDrawer,
+      rightDrawer,
       play
     } = this.props;
 
-    var i = leftDrawer.get('i');
-    var open = leftDrawer.get('open');
-    var item1 = items1.get(i);
-    var waveformValue = item1 ? item1.get('waveform') : "ECG - II";
-    var colorValue = item1 ? item1.get('strokeStyle') : "green";
-    var scaleValue = item1 ? item1.get('scale') : 0.8;
-    var speedValue = item1 ? item1.get('speed') : 3;
+    var i1 = leftDrawer.get('i');
+    var open1 = leftDrawer.get('open');
+    var item1 = items1.get(i1);
+    var waveformValue1 = item1 ? item1.get('waveform') : "ECG - II";
+    var colorValue1 = item1 ? item1.get('strokeStyle') : "green";
+    var scaleValue1 = item1 ? item1.get('scale') : 0.8;
+    var speedValue1 = item1 ? item1.get('speed') : 3;
+
+    var i2 = rightDrawer.get('i');
+    var open2 = rightDrawer.get('open');
+    var item2 = items2.get(i2);
+    var vitalSign2 = item2 ? item2.get('vitalSign') : "HR";
+    var colorValue2 = item2 ? item2.get('strokeStyle') : "green";
 
     var customMode = (
       <Grid fluid={true}>
@@ -319,7 +360,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
                 onLayoutChange={onLayoutChange2}
                 onResizeStop={() => this.forceUpdate()}>
 
-                {layout2.map(this.createElement2)}
+                {layout2.map(this.createCustomElement2)}
 
               </ReactGridLayout>
 
@@ -356,7 +397,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
 
         <Drawer
           width={300}
-          open={open}
+          open={open1}
           openSecondary={true}
         >
           <List>
@@ -365,7 +406,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
               <div>WaveForm</div>
               <SelectField
                 floatingLabelText="WaveForm Type"
-                value={waveformValue}
+                value={waveformValue1}
                 onChange={handleWaveformChange}
               >
                 <MenuItem value="ECG - II" primaryText="ECG - II"/>
@@ -378,12 +419,15 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
               <div>Color</div>
               <SelectField
                 floatingLabelText="Color Display"
-                value={colorValue}
+                value={colorValue1}
                 onChange={handleColorChange}
               >
                 <MenuItem value="green" primaryText="Green"/>
-                <MenuItem value="purple" primaryText="Purple"/>
+                <MenuItem value="red" primaryText="Red"/>
                 <MenuItem value="yellow" primaryText="Yellow"/>
+                <MenuItem value="blue" primaryText="Blue"/>
+                <MenuItem value="white" primaryText="White"/>
+                <MenuItem value="purple" primaryText="Purple"/>
               </SelectField>
             </ListItem>
           </List>
@@ -397,12 +441,12 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
                   min={0}
                   max={2}
                   step={0.05}
-                  defaultValue={scaleValue}
-                  value={scaleValue}
+                  defaultValue={scaleValue1}
+                  value={scaleValue1}
                   onChange={handleScaleChange}
                 />
                 <div style={{'textAlign': 'center'}}>
-                  {scaleValue}
+                  {scaleValue1}
                 </div>
               </ListItem>
 
@@ -412,18 +456,58 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
                   min={0}
                   max={10}
                   step={0.5}
-                  defaultValue={speedValue}
-                  value={speedValue}
+                  defaultValue={speedValue1}
+                  value={speedValue1}
                   onChange={handleSpeedChange}
                 />
                 <div style={{'textAlign': 'center'}}>
-                  {speedValue}
+                  {speedValue1}
                 </div>
               </ListItem>
             </div>
           </List>
           <Divider />
           <MenuItem onTouchTap={handleLeftDrawerClose}>Save</MenuItem>
+        </Drawer>
+
+        <Drawer
+          width={300}
+          open={open2}
+        >
+          <List>
+            <Subheader>Vital Sign Type and Color</Subheader>
+            <ListItem>
+              <div>Vital Sign</div>
+              <SelectField
+                floatingLabelText="Vital Sign Type"
+                value={vitalSign2}
+                onChange={handleVitalSignChange}
+              >
+                <MenuItem value="HR" primaryText="HR"/>
+                <MenuItem value="ABP" primaryText="ABP"/>
+                <MenuItem value="PAP" primaryText="PAP"/>
+                <MenuItem value="SpO2" primaryText="SpO2"/>
+                <MenuItem value="RP" primaryText="RP"/>
+                <MenuItem value="NBP" primaryText="NBP"/>
+              </SelectField>
+            </ListItem>
+            <ListItem>
+              <div>Color</div>
+              <SelectField
+                floatingLabelText="Color Display"
+                value={colorValue2}
+                onChange={handleVitalSignColorChange}
+              >
+                <MenuItem value="green" primaryText="Green"/>
+                <MenuItem value="red" primaryText="Red"/>
+                <MenuItem value="yellow" primaryText="Yellow"/>
+                <MenuItem value="blue" primaryText="Blue"/>
+                <MenuItem value="white" primaryText="White"/>
+                <MenuItem value="purple" primaryText="Purple"/>
+              </SelectField>
+            </ListItem>
+          </List>
+          <MenuItem onTouchTap={handleRightDrawerClose}>Save</MenuItem>
         </Drawer>
       </Grid>
     );
@@ -475,7 +559,9 @@ const mapStateToProps = createStructuredSelector({
   layout1: selectLayout1(),
   items1: selectItems1(),
   layout2: selectLayout2(),
+  items2: selectItems2(),
   leftDrawer: selectLeftDrawer(),
+  rightDrawer: selectRightDrawer(),
   play: selectPlay()
 });
 
@@ -499,7 +585,12 @@ function mapDispatchToProps(dispatch) {
     handleWaveformChange: (event, index, value) => dispatch(handleWaveformChange(value)),
     handleColorChange: (event, index, value) => dispatch(handleColorChange(value)),
     handleScaleChange: (event, value) => dispatch(handleScaleChange(value)),
-    handleSpeedChange: (event, value) => dispatch(handleSpeedChange(value))
+    handleSpeedChange: (event, value) => dispatch(handleSpeedChange(value)),
+
+    handleRightDrawerToggle: (i) => dispatch(handleRightDrawerToggle(i)),
+    handleRightDrawerClose: () => dispatch(handleRightDrawerClose()),
+    handleVitalSignChange: (event, index, value) => dispatch(handleVitalSignChange(value)),
+    handleVitalSignColorChange: (event, index, value) => dispatch(handleVitalSignColorChange(value)),
   };
 }
 

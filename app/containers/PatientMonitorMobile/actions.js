@@ -20,7 +20,11 @@ import {
   HANDLE_WAVEFORM_CHANGE,
   HANDLE_COLOR_CHANGE,
   HANDLE_SCALE_CHANGE,
-  HANDLE_SPEED_CHANGE
+  HANDLE_SPEED_CHANGE,
+  HANDLE_RIGHT_DRAWER_TOGGLE,
+  HANDLE_RIGHT_DRAWER_CLOSE,
+  HANDLE_VITAL_SIGN_CHANGE,
+  HANDLE_VITAL_SIGN_COLOR_CHANGE
 } from './constants';
 
 export function changeLayout1(layout1) {
@@ -82,18 +86,25 @@ export function resetLayout2() {
 }
 
 export function addItem2() {
+  var i = uuid.v4();
   return {
     type: ADD_ITEM2,
     layout2: [
       {
-        i: uuid.v4(),
+        i: i,
         x: 9,
         y: Infinity, // puts it at the bottom
         w: 12,
         h: 1,
         minW: 6
       }
-    ]
+    ],
+    items2: {
+      [i]: {
+        vitalSign: 'HR',
+        strokeStyle: 'green'
+      }
+    }
   }
 }
 
@@ -147,6 +158,33 @@ export function handleScaleChange(value) {
 export function handleSpeedChange(value) {
   return {
     type: HANDLE_SPEED_CHANGE,
+    value: value
+  };
+}
+
+export function handleRightDrawerToggle(i) {
+  return {
+    type: HANDLE_RIGHT_DRAWER_TOGGLE,
+    i: i
+  };
+}
+
+export function handleRightDrawerClose() {
+  return {
+    type: HANDLE_RIGHT_DRAWER_CLOSE,
+  };
+}
+
+export function handleVitalSignChange(value) {
+  return {
+    type: HANDLE_VITAL_SIGN_CHANGE,
+    value: value
+  };
+}
+
+export function handleVitalSignColorChange(value) {
+  return {
+    type: HANDLE_VITAL_SIGN_COLOR_CHANGE,
     value: value
   };
 }

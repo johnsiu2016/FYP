@@ -22,23 +22,26 @@ import {
   HANDLE_WAVEFORM_CHANGE,
   HANDLE_COLOR_CHANGE,
   HANDLE_SCALE_CHANGE,
-  HANDLE_SPEED_CHANGE
+  HANDLE_SPEED_CHANGE,
+  HANDLE_RIGHT_DRAWER_TOGGLE,
+  HANDLE_RIGHT_DRAWER_CLOSE,
+  HANDLE_VITAL_SIGN_CHANGE,
+  HANDLE_VITAL_SIGN_COLOR_CHANGE
 } from './constants';
 
 var initL1T1 = initialLayout1AndItem1();
+var initL2T2 = initialLayout2AndItem2();
 
 const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
     layout1: initL1T1.layout1,
     items1: initL1T1.items1,
-    layout2: [{
-      i: uuid.v4(),
-      x: 0,
-      y: 0,
-      w: 12,
-      h: 1,
-      minW: 6
-    }],
+    layout2: initL2T2.layout2,
+    items2: initL2T2.items2,
     leftDrawer: {
+      i: '',
+      open: false
+    },
+    rightDrawer: {
       i: '',
       open: false
     },
@@ -76,20 +79,18 @@ function patientMonitorMobileReducer(state = initialState, action) {
       return layout2;
 
     case RESET_LAYOUT2:
-      return state.set('layout2', fromJS([{
-        i: uuid.v4(),
-        x: 0,
-        y: 0,
-        w: 12,
-        h: 1,
-        minW: 6
-      }]));
+      let initL2T2 = initialLayout2AndItem2();
+
+      return state.set('layout2', fromJS(initL2T2.layout2))
+        .set('items2', fromJS(initL2T2.items2));
 
     case ADD_ITEM2:
-      return state.update('layout2', layout2 => layout2.concat(fromJS(action.layout2)));
+      return state.update('layout2', layout2 => layout2.concat(fromJS(action.layout2)))
+        .update('items2', items2 => items2.merge(action.items2));
 
     case REMOVE_ITEM2:
-      return state.set('layout2', state.get('layout2').filter((el) => el.get('i') != action.i));
+      return state.set('layout2', state.get('layout2').filter((el) => el.get('i') != action.i))
+        .set('items2', state.get('items2').delete(action.i));
 
 
     case PLAY_MODE:
@@ -101,11 +102,11 @@ function patientMonitorMobileReducer(state = initialState, action) {
         .setIn(['leftDrawer', 'open'], !state.getIn(['leftDrawer', 'open']));
 
     case HANDLE_LEFT_DRAWER_CLOSE:
-      let temp = state.setIn(['leftDrawer', 'i'], '')
+      let leftDrawer = state.setIn(['leftDrawer', 'i'], '')
         .setIn(['leftDrawer', 'open'], false);
 
-      saveToLS('patientMonitorMobile', temp);
-      return temp;
+      saveToLS('patientMonitorMobile', leftDrawer);
+      return leftDrawer;
 
     case HANDLE_WAVEFORM_CHANGE:
       return state.setIn(['items1', state.getIn(['leftDrawer', 'i']), 'waveform'], action.value);
@@ -118,6 +119,24 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case HANDLE_SPEED_CHANGE:
       return state.setIn(['items1', state.getIn(['leftDrawer', 'i']), 'speed'], action.value);
+
+
+    case HANDLE_RIGHT_DRAWER_TOGGLE:
+      return state.setIn(['rightDrawer', 'i'], action.i)
+        .setIn(['rightDrawer', 'open'], !state.getIn(['rightDrawer', 'open']));
+
+    case HANDLE_RIGHT_DRAWER_CLOSE:
+      let rightDrawer = state.setIn(['rightDrawer', 'i'], '')
+        .setIn(['rightDrawer', 'open'], false);
+
+      saveToLS('patientMonitorMobile', rightDrawer);
+      return rightDrawer;
+
+    case HANDLE_VITAL_SIGN_CHANGE:
+      return state.setIn(['items2', state.getIn(['rightDrawer', 'i']), 'vitalSign'], action.value);
+
+    case HANDLE_VITAL_SIGN_COLOR_CHANGE:
+      return state.setIn(['items2', state.getIn(['rightDrawer', 'i']), 'strokeStyle'], action.value);
 
     default:
       return state;
@@ -144,7 +163,7 @@ function getFromLS(key) {
   }
 }
 
-function  initialLayout1AndItem1() {
+function initialLayout1AndItem1() {
   var i = uuid.v4();
   return {
     layout1: [
@@ -163,6 +182,28 @@ function  initialLayout1AndItem1() {
         scale: 0.7,
         speed: 3,
         lineWidth: 3
+      }
+    }
+  }
+}
+
+function initialLayout2AndItem2() {
+  var i = uuid.v4();
+  return {
+    layout2: [
+      {
+        i: i,
+        x: 0,
+        y: 0,
+        w: 12,
+        h: 1,
+        minW: 6
+      }
+    ],
+    items2: {
+      [i]: {
+        vitalSign: 'HR',
+        strokeStyle: 'green'
       }
     }
   }

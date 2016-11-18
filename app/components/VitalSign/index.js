@@ -12,13 +12,22 @@ import {FormattedMessage} from 'react-intl';
 import messages from './messages';
 import styles from './styles.css';
 
+var color = {
+  'green': '#00bd00',
+  'purple': '#CC00FF',
+  'yellow': '#FFFF00',
+  'white': '#FFFFFF',
+  'red': '#FC0203',
+  'blue': '#03FDFB',
+};
+
 class VitalSign extends React.Component { // eslint-disable-line react/prefer-stateless-function
   componentDidUpdate() {
       global.dispatchEvent(new Event('resize'));
   }
 
   render() {
-    var {containerHeight, w} = this.props;
+    var {containerHeight, w, strokeStyle} = this.props;
     var scaleRatio = w/12;
     var scaleContainerHeight = containerHeight * scaleRatio;
 
@@ -28,7 +37,7 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
         height: '100%',
         display: 'flex',
         flexFlow: 'row wrap',
-        color: '#00bd00'
+        color: color[strokeStyle]
       }}>
 
         <div style={{flex: '0.4'}}>

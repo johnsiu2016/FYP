@@ -29,9 +29,19 @@ const selectLayout2 = () => createSelector(
   (patientMonitorMobileState) => patientMonitorMobileState.get('layout2')
 );
 
+const selectItems2 = () => createSelector(
+  selectPatientMonitorMobileDomain(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('items2')
+);
+
 const selectLeftDrawer = () => createSelector(
   selectPatientMonitorMobileDomain(),
   (patientMonitorMobileState) => patientMonitorMobileState.get('leftDrawer')
+);
+
+const selectRightDrawer = () => createSelector(
+  selectPatientMonitorMobileDomain(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('rightDrawer')
 );
 
 const selectPlay = () => createSelector(
@@ -44,6 +54,8 @@ export {
   selectLayout1,
   selectItems1,
   selectLayout2,
+  selectItems2,
   selectLeftDrawer,
+  selectRightDrawer,
   selectPlay
 };
