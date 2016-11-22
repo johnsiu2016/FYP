@@ -164,21 +164,82 @@ function getFromLS(key) {
 }
 
 function initialLayout1AndItem1() {
-  var i = uuid.v4();
+  var i1 = uuid.v4();
+  var i2 = uuid.v4();
+  var i3 = uuid.v4();
+  var i4 = uuid.v4();
+  var i5 = uuid.v4();
+
   return {
     layout1: [
       {
-        i: i,
+        i: i1,
         x: 0,
         y: 0,
+        w: 12,
+        h: 1
+      },
+      {
+        i: i2,
+        x: 0,
+        y: 1,
+        w: 12,
+        h: 1
+      },
+      {
+        i: i3,
+        x: 0,
+        y: 2,
+        w: 12,
+        h: 1
+      },
+      {
+        i: i4,
+        x: 0,
+        y: 3,
+        w: 12,
+        h: 1
+      },
+      {
+        i: i5,
+        x: 0,
+        y: 4,
         w: 12,
         h: 1
       }
     ],
     items1: {
-      [i]: {
+      [i1]: {
         waveform: 'ECG - II',
         strokeStyle: 'green',
+        scale: 0.7,
+        speed: 3,
+        lineWidth: 3
+      },
+      [i2]: {
+        waveform: 'PPG',
+        strokeStyle: 'red',
+        scale: 0.7,
+        speed: 3,
+        lineWidth: 3
+      },
+      [i3]: {
+        waveform: 'RBBB',
+        strokeStyle: 'yellow',
+        scale: 0.7,
+        speed: 3,
+        lineWidth: 3
+      },
+      [i4]: {
+        waveform: 'Bigeminy',
+        strokeStyle: 'blue',
+        scale: 0.7,
+        speed: 3,
+        lineWidth: 3
+      },
+      [i5]: {
+        waveform: 'ECG - II',
+        strokeStyle: 'white',
         scale: 0.7,
         speed: 3,
         lineWidth: 3
@@ -188,22 +249,75 @@ function initialLayout1AndItem1() {
 }
 
 function initialLayout2AndItem2() {
-  var i = uuid.v4();
+  var i1 = uuid.v4();
+  var i2 = uuid.v4();
+  var i3 = uuid.v4();
+  var i4 = uuid.v4();
+  var i5 = uuid.v4();
+
   return {
     layout2: [
       {
-        i: i,
+        i: i1,
         x: 0,
         y: 0,
+        w: 12,
+        h: 1,
+        minW: 6
+      },
+      {
+        i: i2,
+        x: 0,
+        y: 1,
+        w: 12,
+        h: 1,
+        minW: 6
+      },
+      {
+        i: i3,
+        x: 0,
+        y: 2,
+        w: 12,
+        h: 1,
+        minW: 6
+      },
+      {
+        i: i4,
+        x: 0,
+        y: 3,
+        w: 12,
+        h: 1,
+        minW: 6
+      },
+      {
+        i: i5,
+        x: 0,
+        y: 4,
         w: 12,
         h: 1,
         minW: 6
       }
     ],
     items2: {
-      [i]: {
+      [i1]: {
         vitalSign: 'HR',
         strokeStyle: 'green'
+      },
+      [i2]: {
+        vitalSign: 'ABP',
+        strokeStyle: 'red'
+      },
+      [i3]: {
+        vitalSign: 'PAP',
+        strokeStyle: 'yellow'
+      },
+      [i4]: {
+        vitalSign: 'SpO2',
+        strokeStyle: 'blue'
+      },
+      [i5]: {
+        vitalSign: 'RP',
+        strokeStyle: 'white'
       }
     }
   }
