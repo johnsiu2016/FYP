@@ -119,6 +119,7 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
             height: '100%',
             display: 'flex',
             flexFlow: 'row wrap',
+            justifyContent: 'center',
             color: color[strokeStyle]
           }}>
 
