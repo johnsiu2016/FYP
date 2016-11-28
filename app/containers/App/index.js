@@ -97,6 +97,8 @@ export default class App extends React.Component { // eslint-disable-line react/
             <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitor">Patient Monitor Desktop</Link></MenuItem>
             <MenuItem onTouchTap={this.handleClose}><Link to="/patientMonitorMobile">Patient Monitor Mobile</Link></MenuItem>
             <MenuItem onTouchTap={this.handleClose}><Link to="/settings">Settings</Link></MenuItem>
+            <MenuItem onTouchTap={this.handleClose}><Link to="/credit">Credit</Link></MenuItem>
+            <MenuItem onTouchTap={this.handleClose}><a href="/api">API</a></MenuItem>
           </Drawer>
         </div>
       </MuiThemeProvider>)
