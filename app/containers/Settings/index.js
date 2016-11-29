@@ -53,7 +53,7 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
     } = this.props;
 
     return (
-      <div style={{background: '#212121'}}>
+      <div style={{background: '#212121', height: '100vh'}}>
         <Grid>
           <Paper>
             <List>
