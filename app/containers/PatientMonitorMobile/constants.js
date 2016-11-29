@@ -23,3 +23,4 @@ export const HANDLE_RIGHT_DRAWER_TOGGLE = 'app/PatientMonitorMobile/HANDLE_RIGHT
 export const HANDLE_RIGHT_DRAWER_CLOSE = 'app/PatientMonitorMobile/HANDLE_RIGHT_DRAWER_CLOSE';
 export const HANDLE_VITAL_SIGN_CHANGE = 'app/PatientMonitorMobile/HANDLE_VITAL_SIGN_CHANGE';
 export const HANDLE_VITAL_SIGN_COLOR_CHANGE = 'app/PatientMonitorMobile/HANDLE_VITAL_SIGN_COLOR_CHANGE';
+export const HANDLE_POWER_BUTTON_TOGGLE = 'app/PatientMonitorMobile/HANDLE_POWER_BUTTON_TOGGLE';

@@ -13,7 +13,7 @@ import styles from './styles.css';
 import ReactGrid, {WidthProvider} from 'react-grid-layout';
 const ReactGridLayout = WidthProvider(ReactGrid);
 
-import {grey900, grey800, grey700} from 'material-ui/styles/colors';
+import {grey900, grey800, grey700, red500, grey50} from 'material-ui/styles/colors';
 
 import {Grid, Row, Col} from 'react-bootstrap';
 
@@ -41,6 +41,8 @@ import VitalSign from 'components/VitalSign';
 
 import {createStructuredSelector} from 'reselect';
 
+import IconButton from 'material-ui/IconButton';
+
 import {
   changeLayout1,
   resetLayout1,
@@ -64,7 +66,9 @@ import {
   handleRightDrawerToggle,
   handleRightDrawerClose,
   handleVitalSignChange,
-  handleVitalSignColorChange
+  handleVitalSignColorChange,
+
+  handlePowerButtonToggle
 } from './actions';
 
 import {
@@ -74,8 +78,16 @@ import {
   selectItems2,
   selectLeftDrawer,
   selectRightDrawer,
-  selectPlay
+  selectPlay,
+  selectPowerOn
 } from './selectors';
+
+import {
+  selectIP,
+  selectPort,
+  selectProtocol,
+  selectPatientMonitor
+} from 'containers/Settings/selectors';
 
 let color = {
   'green': '#00bd00',
@@ -89,10 +101,46 @@ let color = {
 class PatientMonitorMobile extends React.Component { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
     window.addEventListener("keyup", this.props.onPlayModeKeyUp);
+
+    if (this.props.powerOn) {
+      this.socket = io.connect('http://localhost:5000');
+      this.socket.emit('initial', {
+        ip: this.props.ip,
+        port: this.props.port,
+        protocol: this.props.protocol,
+        patientMonitor: this.props.patientMonitor
+      });
+      this.socket.on('initialAck', () => {
+        console.log('connected mount');
+      });
+    } else if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
   }
 
   componentWillUnmount() {
     window.removeEventListener("keyup", this.props.onPlayModeKeyUp);
+    this.socket.disconnect();
+    this.socket = null;
+  }
+
+  componentDidUpdate() {
+    if (this.props.powerOn) {
+      this.socket = io.connect('http://localhost:5000');
+      this.socket.emit('initial', {
+        ip: this.props.ip,
+        port: this.props.port,
+        protocol: this.props.protocol,
+        patientMonitor: this.props.patientMonitor
+      });
+      this.socket.on('initialAck', () => {
+        console.log('connected update');
+      });
+    } else if (this.socket) {
+      this.socket.disconnect();
+      this.socket = null;
+    }
   }
 
   // waveform
@@ -276,7 +324,8 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       onAddItem2,
       handleRightDrawerClose,
       handleVitalSignChange,
-      handleVitalSignColorChange
+      handleVitalSignColorChange,
+      handlePowerButtonToggle
     } = this.props;
 
     let {
@@ -286,7 +335,8 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       items2,
       leftDrawer,
       rightDrawer,
-      play
+      play,
+      powerOn
     } = this.props;
 
     let i1 = leftDrawer.get('i');
@@ -385,8 +435,20 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
         </Row>
 
         <Row>
-          <Col lg={12} style={{height: '5vh', background: grey700}}>
-
+          <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
+            <IconButton
+              style={{
+                float: 'right'
+              }}
+              onClick={handlePowerButtonToggle}
+              tooltip="top-center"
+              tooltipPosition="top-center"
+              touch={true}
+            >
+              <FontIcon className="material-icons" color={powerOn ? red500 : grey50}>
+                power_settings_new
+              </FontIcon>
+            </IconButton>
           </Col>
         </Row>
 
@@ -555,7 +617,12 @@ const mapStateToProps = createStructuredSelector({
   items2: selectItems2(),
   leftDrawer: selectLeftDrawer(),
   rightDrawer: selectRightDrawer(),
-  play: selectPlay()
+  play: selectPlay(),
+  ip: selectIP(),
+  port: selectPort(),
+  protocol: selectProtocol(),
+  patientMonitor: selectPatientMonitor(),
+  powerOn: selectPowerOn()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -584,6 +651,8 @@ function mapDispatchToProps(dispatch) {
     handleRightDrawerClose: () => dispatch(handleRightDrawerClose()),
     handleVitalSignChange: (event, index, value) => dispatch(handleVitalSignChange(value)),
     handleVitalSignColorChange: (event, index, value) => dispatch(handleVitalSignColorChange(value)),
+
+    handlePowerButtonToggle: () => dispatch(handlePowerButtonToggle())
   };
 }
 

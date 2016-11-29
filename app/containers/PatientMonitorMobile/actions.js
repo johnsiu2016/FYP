@@ -24,7 +24,8 @@ import {
   HANDLE_RIGHT_DRAWER_TOGGLE,
   HANDLE_RIGHT_DRAWER_CLOSE,
   HANDLE_VITAL_SIGN_CHANGE,
-  HANDLE_VITAL_SIGN_COLOR_CHANGE
+  HANDLE_VITAL_SIGN_COLOR_CHANGE,
+  HANDLE_POWER_BUTTON_TOGGLE
 } from './constants';
 
 export function changeLayout1(layout1) {
@@ -186,5 +187,11 @@ export function handleVitalSignColorChange(value) {
   return {
     type: HANDLE_VITAL_SIGN_COLOR_CHANGE,
     value: value
+  };
+}
+
+export function handlePowerButtonToggle() {
+  return {
+    type: HANDLE_POWER_BUTTON_TOGGLE,
   };
 }

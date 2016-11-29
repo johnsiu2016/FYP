@@ -26,11 +26,12 @@ import {
   HANDLE_RIGHT_DRAWER_TOGGLE,
   HANDLE_RIGHT_DRAWER_CLOSE,
   HANDLE_VITAL_SIGN_CHANGE,
-  HANDLE_VITAL_SIGN_COLOR_CHANGE
+  HANDLE_VITAL_SIGN_COLOR_CHANGE,
+  HANDLE_POWER_BUTTON_TOGGLE
 } from './constants';
 
-var initL1T1 = initialLayout1AndItem1();
-var initL2T2 = initialLayout2AndItem2();
+let initL1T1 = initialLayout1AndItem1();
+let initL2T2 = initialLayout2AndItem2();
 
 const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
     layout1: initL1T1.layout1,
@@ -45,7 +46,8 @@ const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
       i: '',
       open: false
     },
-    play: false
+    play: false,
+    powerOn: false
   });
 
 
@@ -138,6 +140,9 @@ function patientMonitorMobileReducer(state = initialState, action) {
     case HANDLE_VITAL_SIGN_COLOR_CHANGE:
       return state.setIn(['items2', state.getIn(['rightDrawer', 'i']), 'strokeStyle'], action.value);
 
+    case HANDLE_POWER_BUTTON_TOGGLE:
+      return state.set('powerOn', !state.get('powerOn'));
+
     default:
       return state;
   }
@@ -164,11 +169,11 @@ function getFromLS(key) {
 }
 
 function initialLayout1AndItem1() {
-  var i1 = uuid.v4();
-  var i2 = uuid.v4();
-  var i3 = uuid.v4();
-  var i4 = uuid.v4();
-  var i5 = uuid.v4();
+  let i1 = uuid.v4();
+  let i2 = uuid.v4();
+  let i3 = uuid.v4();
+  let i4 = uuid.v4();
+  let i5 = uuid.v4();
 
   return {
     layout1: [
@@ -249,11 +254,11 @@ function initialLayout1AndItem1() {
 }
 
 function initialLayout2AndItem2() {
-  var i1 = uuid.v4();
-  var i2 = uuid.v4();
-  var i3 = uuid.v4();
-  var i4 = uuid.v4();
-  var i5 = uuid.v4();
+  let i1 = uuid.v4();
+  let i2 = uuid.v4();
+  let i3 = uuid.v4();
+  let i4 = uuid.v4();
+  let i5 = uuid.v4();
 
   return {
     layout2: [

@@ -49,6 +49,11 @@ const selectPlay = () => createSelector(
   (patientMonitorMobileState) => patientMonitorMobileState.get('play')
 );
 
+const selectPowerOn = () => createSelector(
+  selectPatientMonitorMobileDomain(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('powerOn')
+);
+
 export {
   selectPatientMonitorMobileDomain,
   selectLayout1,
@@ -57,5 +62,6 @@ export {
   selectItems2,
   selectLeftDrawer,
   selectRightDrawer,
-  selectPlay
+  selectPlay,
+  selectPowerOn
 };

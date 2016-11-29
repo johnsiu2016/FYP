@@ -40,7 +40,7 @@ import {
 
 export class Settings extends React.Component { // eslint-disable-line react/prefer-stateless-function
   render() {
-    var {
+    let {
       handleSettingsConnectionIP,
       handleSettingsConnectionPort,
       handleSettingsConnectionProtocol,
@@ -80,7 +80,7 @@ export class Settings extends React.Component { // eslint-disable-line react/pre
                   onChange={handleSettingsConnectionProtocol}
                 >
                   <MenuItem value="TCP" primaryText="TCP"/>
-                  <MenuItem value="IP" primaryText="IP"/>
+                  <MenuItem value="UDP" primaryText="UDP"/>
                 </SelectField>
               </ListItem>
               <ListItem disabled={true}>
