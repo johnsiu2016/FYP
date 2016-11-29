@@ -27,7 +27,8 @@ import {
   HANDLE_RIGHT_DRAWER_CLOSE,
   HANDLE_VITAL_SIGN_CHANGE,
   HANDLE_VITAL_SIGN_COLOR_CHANGE,
-  HANDLE_POWER_BUTTON_TOGGLE
+  HANDLE_POWER_BUTTON_TOGGLE,
+  SOCKET_CONNECTED
 } from './constants';
 
 let initL1T1 = initialLayout1AndItem1();
@@ -47,7 +48,8 @@ const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
       open: false
     },
     play: false,
-    powerOn: false
+    powerOn: false,
+    socket: null
   });
 
 
@@ -142,6 +144,10 @@ function patientMonitorMobileReducer(state = initialState, action) {
 
     case HANDLE_POWER_BUTTON_TOGGLE:
       return state.set('powerOn', !state.get('powerOn'));
+
+    case SOCKET_CONNECTED:
+      console.log(`SOCKET_CONNECTED ${action.socket}`);
+      return state.set('socket', action.socket);
 
     default:
       return state;

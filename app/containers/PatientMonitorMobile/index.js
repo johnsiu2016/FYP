@@ -79,7 +79,8 @@ import {
   selectLeftDrawer,
   selectRightDrawer,
   selectPlay,
-  selectPowerOn
+  selectPowerOn,
+  selectSocket
 } from './selectors';
 
 import {
@@ -101,46 +102,11 @@ let color = {
 class PatientMonitorMobile extends React.Component { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
     window.addEventListener("keyup", this.props.onPlayModeKeyUp);
-
-    if (this.props.powerOn) {
-      this.socket = io.connect('http://localhost:5000');
-      this.socket.emit('initial', {
-        ip: this.props.ip,
-        port: this.props.port,
-        protocol: this.props.protocol,
-        patientMonitor: this.props.patientMonitor
-      });
-      this.socket.on('initialAck', () => {
-        console.log('connected mount');
-      });
-    } else if (this.socket) {
-      this.socket.disconnect();
-      this.socket = null;
-    }
   }
 
   componentWillUnmount() {
     window.removeEventListener("keyup", this.props.onPlayModeKeyUp);
-    this.socket.disconnect();
-    this.socket = null;
-  }
 
-  componentDidUpdate() {
-    if (this.props.powerOn) {
-      this.socket = io.connect('http://localhost:5000');
-      this.socket.emit('initial', {
-        ip: this.props.ip,
-        port: this.props.port,
-        protocol: this.props.protocol,
-        patientMonitor: this.props.patientMonitor
-      });
-      this.socket.on('initialAck', () => {
-        console.log('connected update');
-      });
-    } else if (this.socket) {
-      this.socket.disconnect();
-      this.socket = null;
-    }
   }
 
   // waveform
@@ -191,12 +157,15 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
 
         </div>
         <Card containerStyle={{height: '100%', width: '100%'}} style={{height: '85%', width: '100%'}}>
-          <ECG waveform={waveform}
-               strokeStyle={strokeStyle}
-               lineWidth={lineWidth}
-               scale={scale}
-               speed={speed}
-               showBuffer={true}/>
+          <ECG
+            socket={this.props.socket}
+            i={i}
+            waveform={waveform}
+            strokeStyle={strokeStyle}
+            lineWidth={lineWidth}
+            scale={scale}
+            speed={speed}
+            showBuffer={true}/>
         </Card>
       </div>
     )
@@ -231,12 +200,15 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
           </span>
         </div>
         <div style={{height: '85%', width: '100%'}}>
-          <ECG waveform={waveform}
-               strokeStyle={strokeStyle}
-               lineWidth={lineWidth}
-               scale={scale}
-               speed={speed}
-               showBuffer={false}/>
+          <ECG
+            socket={this.props.socket}
+            i={i}
+            waveform={waveform}
+            strokeStyle={strokeStyle}
+            lineWidth={lineWidth}
+            scale={scale}
+            speed={speed}
+            showBuffer={false}/>
         </div>
       </div>
     )
@@ -441,7 +413,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
                 float: 'right'
               }}
               onClick={handlePowerButtonToggle}
-              tooltip="top-center"
+              tooltip="Power"
               tooltipPosition="top-center"
               touch={true}
             >
@@ -622,7 +594,8 @@ const mapStateToProps = createStructuredSelector({
   port: selectPort(),
   protocol: selectProtocol(),
   patientMonitor: selectPatientMonitor(),
-  powerOn: selectPowerOn()
+  powerOn: selectPowerOn(),
+  socket: selectSocket()
 });
 
 function mapDispatchToProps(dispatch) {

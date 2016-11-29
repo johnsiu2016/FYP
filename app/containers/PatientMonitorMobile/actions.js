@@ -25,7 +25,8 @@ import {
   HANDLE_RIGHT_DRAWER_CLOSE,
   HANDLE_VITAL_SIGN_CHANGE,
   HANDLE_VITAL_SIGN_COLOR_CHANGE,
-  HANDLE_POWER_BUTTON_TOGGLE
+  HANDLE_POWER_BUTTON_TOGGLE,
+  SOCKET_CONNECTED
 } from './constants';
 
 export function changeLayout1(layout1) {
@@ -42,7 +43,7 @@ export function resetLayout1() {
 }
 
 export function addItem1() {
-  var i = uuid.v4();
+  let i = uuid.v4();
   return {
     type: ADD_ITEM1,
     layout1: [
@@ -87,7 +88,7 @@ export function resetLayout2() {
 }
 
 export function addItem2() {
-  var i = uuid.v4();
+  let i = uuid.v4();
   return {
     type: ADD_ITEM2,
     layout2: [
@@ -193,5 +194,12 @@ export function handleVitalSignColorChange(value) {
 export function handlePowerButtonToggle() {
   return {
     type: HANDLE_POWER_BUTTON_TOGGLE,
+  };
+}
+
+export function socketConnected(socket) {
+  return {
+    type: SOCKET_CONNECTED,
+    socket: socket
   };
 }

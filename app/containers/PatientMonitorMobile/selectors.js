@@ -54,6 +54,11 @@ const selectPowerOn = () => createSelector(
   (patientMonitorMobileState) => patientMonitorMobileState.get('powerOn')
 );
 
+const selectSocket = () => createSelector(
+  selectPatientMonitorMobileDomain(),
+  (patientMonitorMobileState) => patientMonitorMobileState.get('socket')
+);
+
 export {
   selectPatientMonitorMobileDomain,
   selectLayout1,
@@ -63,5 +68,6 @@ export {
   selectLeftDrawer,
   selectRightDrawer,
   selectPlay,
-  selectPowerOn
+  selectPowerOn,
+  selectSocket
 };
