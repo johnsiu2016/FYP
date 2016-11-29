@@ -3,6 +3,7 @@
  * PatientMonitorMobile
  *
  */
+'use strict';
 
 import React from 'react';
 import {connect} from 'react-redux';
@@ -37,8 +38,6 @@ import SelectField from 'material-ui/SelectField';
 import Drawer from 'material-ui/Drawer';
 
 import VitalSign from 'components/VitalSign';
-
-import {Scrollbars} from 'react-custom-scrollbars';
 
 import {createStructuredSelector} from 'reselect';
 
@@ -78,7 +77,7 @@ import {
   selectPlay
 } from './selectors';
 
-var color = {
+let color = {
   'green': '#00bd00',
   'purple': '#CC00FF',
   'yellow': '#FFFF00',
@@ -98,22 +97,22 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
 
   // waveform
   createCustomElement1 = (el) => {
-    var {handleLeftDrawerToggle, onRemoveItem1, items1} = this.props;
+    let {handleLeftDrawerToggle, onRemoveItem1, items1} = this.props;
 
-    var removeStyle = {
+    let removeStyle = {
       position: 'absolute',
       top: 0,
       right: '0px',
       cursor: 'pointer'
     };
 
-    var i = el.get('i');
-    var item1 = items1.get(i);
-    var waveform = item1.get('waveform');
-    var strokeStyle = item1.get('strokeStyle');
-    var lineWidth = item1.get('lineWidth');
-    var scale = item1.get('scale');
-    var speed = item1.get('speed');
+    let i = el.get('i');
+    let item1 = items1.get(i);
+    let waveform = item1.get('waveform');
+    let strokeStyle = item1.get('strokeStyle');
+    let lineWidth = item1.get('lineWidth');
+    let scale = item1.get('scale');
+    let speed = item1.get('speed');
 
     if (el.get('y') === null) {
       el = el.set('y', Infinity);
@@ -156,15 +155,15 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
   };
 
   createPlayElement1 = (el) => {
-    var {items1} = this.props;
+    let {items1} = this.props;
 
-    var i = el.get('i');
-    var item1 = items1.get(i);
-    var waveform = item1.get('waveform');
-    var strokeStyle = item1.get('strokeStyle');
-    var lineWidth = item1.get('lineWidth');
-    var scale = item1.get('scale');
-    var speed = item1.get('speed');
+    let i = el.get('i');
+    let item1 = items1.get(i);
+    let waveform = item1.get('waveform');
+    let strokeStyle = item1.get('strokeStyle');
+    let lineWidth = item1.get('lineWidth');
+    let scale = item1.get('scale');
+    let speed = item1.get('speed');
 
     if (el.get('y') === null) {
       el = el.set('y', Infinity);
@@ -197,21 +196,21 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
 
   // vital sign
   createCustomElement2 = (el) => {
-    var {onRemoveItem2, handleRightDrawerToggle, items2} = this.props;
+    let {onRemoveItem2, handleRightDrawerToggle, items2} = this.props;
 
-    var removeStyle = {
+    let removeStyle = {
       position: 'absolute',
       right: '2px',
       top: 0,
       cursor: 'pointer'
     };
 
-    var i = el.get('i');
-    var item2 = items2.get(i);
-    var vitalSign = item2.get('vitalSign');
-    var strokeStyle = item2.get('strokeStyle');
+    let i = el.get('i');
+    let item2 = items2.get(i);
+    let vitalSign = item2.get('vitalSign');
+    let strokeStyle = item2.get('strokeStyle');
 
-    var w = el.get('w');
+    let w = el.get('w');
 
     return (
       <div key={i} data-grid={el.toObject()}>
@@ -238,14 +237,14 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
   };
 
   createPlayElement2 = (el) => {
-    var {items2} = this.props;
+    let {items2} = this.props;
 
-    var i = el.get('i');
-    var item2 = items2.get(i);
-    var vitalSign = item2.get('vitalSign');
-    var strokeStyle = item2.get('strokeStyle');
+    let i = el.get('i');
+    let item2 = items2.get(i);
+    let vitalSign = item2.get('vitalSign');
+    let strokeStyle = item2.get('strokeStyle');
 
-    var w = el.get('w');
+    let w = el.get('w');
 
     return (
       <div key={i} data-grid={el.toObject()}>
@@ -262,7 +261,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
   };
 
   render() {
-    var {
+    let {
       onLayoutChange1,
       onAddItem1,
       onPlayMode,
@@ -280,7 +279,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       handleVitalSignColorChange
     } = this.props;
 
-    var {
+    let {
       layout1,
       items1,
       layout2,
@@ -290,21 +289,21 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       play
     } = this.props;
 
-    var i1 = leftDrawer.get('i');
-    var open1 = leftDrawer.get('open');
-    var item1 = items1.get(i1);
-    var waveformValue1 = item1 ? item1.get('waveform') : "ECG - II";
-    var colorValue1 = item1 ? item1.get('strokeStyle') : "green";
-    var scaleValue1 = item1 ? item1.get('scale') : 0.8;
-    var speedValue1 = item1 ? item1.get('speed') : 3;
+    let i1 = leftDrawer.get('i');
+    let open1 = leftDrawer.get('open');
+    let item1 = items1.get(i1);
+    let waveformValue1 = item1 ? item1.get('waveform') : "ECG - II";
+    let colorValue1 = item1 ? item1.get('strokeStyle') : "green";
+    let scaleValue1 = item1 ? item1.get('scale') : 0.8;
+    let speedValue1 = item1 ? item1.get('speed') : 3;
 
-    var i2 = rightDrawer.get('i');
-    var open2 = rightDrawer.get('open');
-    var item2 = items2.get(i2);
-    var vitalSign2 = item2 ? item2.get('vitalSign') : "HR";
-    var colorValue2 = item2 ? item2.get('strokeStyle') : "green";
+    let i2 = rightDrawer.get('i');
+    let open2 = rightDrawer.get('open');
+    let item2 = items2.get(i2);
+    let vitalSign2 = item2 ? item2.get('vitalSign') : "HR";
+    let colorValue2 = item2 ? item2.get('strokeStyle') : "green";
 
-    var customMode = (
+    let customMode = (
       <Grid fluid={true}>
         <Row>
           <Col lg={9} style={{height: '95vh', background: grey900, overflow: 'auto'}}
@@ -508,7 +507,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       </Grid>
     );
 
-    var playMode = (
+    let playMode = (
       <Grid fluid={true}>
         <Row>
           <Col lg={9} style={{height: '95vh', background: grey900, overflow: 'auto'}}
