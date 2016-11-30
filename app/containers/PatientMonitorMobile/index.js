@@ -563,7 +563,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
           </Col>
         </Row>
         <Row>
-          <Col lg={12} style={{height: '5vh', background: grey700}}>
+          <Col lg={12} style={{height: '5vh', minHeight: 48, background: grey700}}>
             <IconButton
               style={{
                 float: 'right'
