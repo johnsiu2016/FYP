@@ -244,6 +244,8 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
         </div>
         <Card containerStyle={{width: '100%', height: '100%'}} style={{width: '100%', height: '85%'}}>
           <VitalSign
+            socket={this.props.socket}
+            i={i}
             vitalSign={vitalSign}
             strokeStyle={strokeStyle}
             w={w}/>
@@ -268,6 +270,8 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
         </div>
         <div style={{width: '100%', height: '85%'}}>
           <VitalSign
+            socket={this.props.socket}
+            i={i}
             vitalSign={vitalSign}
             strokeStyle={strokeStyle}
             w={w}/>

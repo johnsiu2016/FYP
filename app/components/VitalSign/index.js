@@ -12,7 +12,7 @@ import {FormattedMessage} from 'react-intl';
 import messages from './messages';
 import styles from './styles.css';
 
-var color = {
+let color = {
   'green': '#00bd00',
   'purple': '#CC00FF',
   'yellow': '#FFFF00',
@@ -21,7 +21,7 @@ var color = {
   'blue': '#03FDFB',
 };
 
-var data = {
+let data = {
   'HR': {
     'top': 120,
     'bottom': 50,
@@ -55,15 +55,65 @@ var data = {
 };
 
 class VitalSign extends React.Component { // eslint-disable-line react/prefer-stateless-function
+  componentDidMount() {
+    global.dispatchEvent(new Event('resize'));
+
+    let self = this;
+
+    self.props.socket && self.props.socket.on(self.props.i, (data) => {
+      switch (this.props.vitalSign) {
+        case "HR":
+        case "SpO2":
+        case "RP":
+          this.HRTop.innerHTML = data.top;
+          this.HRBottom.innerHTML = data.bottom;
+          this.HRData.innerHTML = data.data;
+          break;
+
+        case "ABP":
+        case "PAP":
+        case "NBP":
+          this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
+          this.BPMean.innerHTML = data.mean;
+          break;
+      }
+    });
+  }
+
+  componentWillUnmount() {
+
+  }
+
   componentDidUpdate() {
     global.dispatchEvent(new Event('resize'));
+
+    let self = this;
+
+    self.props.socket && self.props.socket.on(self.props.i, (data) => {
+      switch (this.props.vitalSign) {
+        case "HR":
+        case "SpO2":
+        case "RP":
+          this.HRTop.innerHTML = data.top;
+          this.HRBottom.innerHTML = data.bottom;
+          this.HRData.innerHTML = data.data;
+          break;
+
+        case "ABP":
+        case "PAP":
+        case "NBP":
+          this.BPSystolicAndDiastolic.innerHTML = `${data.systolic}/${data.diastolic}`;
+          this.BPMean.innerHTML = data.mean;
+          break;
+      }
+    });
   }
 
   render() {
-    var {containerHeight, w, strokeStyle, vitalSign} = this.props;
-    var scaleRatio = w / 12;
-    var scaleContainerHeight = containerHeight * scaleRatio;
-    var element = null;
+    let {containerHeight, w, strokeStyle, vitalSign} = this.props;
+    let scaleRatio = w / 12;
+    let scaleContainerHeight = containerHeight * scaleRatio;
+    let element = null;
 
     switch (vitalSign) {
       case "HR":
@@ -87,14 +137,20 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
                   fontSize: `${scaleContainerHeight * 0.2}px`,
                   lineHeight: `${scaleContainerHeight * 0.2}px`,
                   textAlign: 'center'
-                }}>
+                }}
+                     ref={(HRTop) => {
+                       this.HRTop = HRTop
+                     }}>
                   {data[vitalSign].top}
                 </div>
                 <div style={{
                   fontSize: `${scaleContainerHeight * 0.2}px`,
                   lineHeight: `${scaleContainerHeight * 0.2}px`,
                   textAlign: 'center'
-                }}>
+                }}
+                     ref={(HRBottom) => {
+                       this.HRBottom = HRBottom
+                     }}>
                   {data[vitalSign].bottom}
                 </div>
               </div>
@@ -104,7 +160,11 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
               flex: '0.6',
               fontSize: `${scaleContainerHeight * 0.9}px`,
               lineHeight: `${scaleContainerHeight * 0.9}px`
-            }}>
+            }}
+                 ref={(HRData) => {
+                   this.HRData = HRData
+                 }}
+            >
               {data[vitalSign].data}
             </div>
           </div>
@@ -134,7 +194,11 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
               fontSize: `${scaleContainerHeight * 0.4}px`,
               lineHeight: `${scaleContainerHeight * 0.4}px`,
               alignSelf: 'center'
-            }}>
+            }}
+                 ref={(BPSystolicAndDiastolic) => {
+                   this.BPSystolicAndDiastolic = BPSystolicAndDiastolic
+                 }}
+            >
               {data[vitalSign].systolic}
               {"/"}
               {data[vitalSign].diastolic}
@@ -145,7 +209,11 @@ class VitalSign extends React.Component { // eslint-disable-line react/prefer-st
               fontSize: `${scaleContainerHeight * 0.4}px`,
               lineHeight: `${scaleContainerHeight * 0.4}px`,
               alignSelf: 'center'
-            }}>
+            }}
+                 ref={(BPMean) => {
+                   this.BPMean = BPMean
+                 }}
+            >
               {"("}
               {data[vitalSign].mean}
               {")"}
