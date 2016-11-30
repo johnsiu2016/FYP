@@ -67,7 +67,6 @@ export {
   selectItems2,
   selectLeftDrawer,
   selectRightDrawer,
-  selectPlay,
   selectPowerOn,
   selectSocket
 };

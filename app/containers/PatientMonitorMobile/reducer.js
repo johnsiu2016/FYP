@@ -47,7 +47,6 @@ const initialState = fromJS(getFromLS('patientMonitorMobile')) || fromJS({
       i: '',
       open: false
     },
-    play: false,
     powerOn: false,
     socket: null
   });
@@ -95,10 +94,6 @@ function patientMonitorMobileReducer(state = initialState, action) {
     case REMOVE_ITEM2:
       return state.set('layout2', state.get('layout2').filter((el) => el.get('i') != action.i))
         .set('items2', state.get('items2').delete(action.i));
-
-
-    case PLAY_MODE:
-      return state.set('play', !state.get('play'));
 
 
     case HANDLE_LEFT_DRAWER_TOGGLE:

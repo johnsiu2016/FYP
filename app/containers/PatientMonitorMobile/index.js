@@ -54,8 +54,6 @@ import {
   addItem2,
   removeItem2,
 
-  playMode,
-
   handleLeftDrawerToggle,
   handleLeftDrawerClose,
   handleWaveformChange,
@@ -78,7 +76,6 @@ import {
   selectItems2,
   selectLeftDrawer,
   selectRightDrawer,
-  selectPlay,
   selectPowerOn,
   selectSocket
 } from './selectors';
@@ -101,12 +98,11 @@ let color = {
 
 class PatientMonitorMobile extends React.Component { // eslint-disable-line react/prefer-stateless-function
   componentDidMount() {
-    window.addEventListener("keyup", this.props.onPlayModeKeyUp);
+    window.addEventListener("keyup", this.props.onPowerOnModeKeyUp);
   }
 
   componentWillUnmount() {
-    window.removeEventListener("keyup", this.props.onPlayModeKeyUp);
-
+    window.removeEventListener("keyup", this.props.onPowerOnModeKeyUp);
   }
 
   // waveform
@@ -284,7 +280,6 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
     let {
       onLayoutChange1,
       onAddItem1,
-      onPlayMode,
       onResetLayout1,
       handleWaveformChange,
       handleColorChange,
@@ -307,7 +302,6 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       items2,
       leftDrawer,
       rightDrawer,
-      play,
       powerOn
     } = this.props;
 
@@ -358,13 +352,6 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
                 onClick={onAddItem1}>
                 <FontIcon className="material-icons">
                   add
-                </FontIcon>
-              </FloatingActionButton>
-              <FloatingActionButton
-                style={{marginLeft: '20px'}}
-                onClick={onPlayMode}>
-                <FontIcon className="material-icons">
-                  play_arrow
                 </FontIcon>
               </FloatingActionButton>
             </div>
@@ -541,7 +528,7 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
       </Grid>
     );
 
-    let playMode = (
+    let powerOnMode = (
       <Grid fluid={true}>
         <Row>
           <Col lg={9} style={{height: '95vh', background: grey900, overflow: 'auto'}}
@@ -573,12 +560,24 @@ class PatientMonitorMobile extends React.Component { // eslint-disable-line reac
         </Row>
         <Row>
           <Col lg={12} style={{height: '5vh', background: grey700}}>
-
+            <IconButton
+              style={{
+                float: 'right'
+              }}
+              onClick={handlePowerButtonToggle}
+              tooltip="Power"
+              tooltipPosition="top-center"
+              touch={true}
+            >
+              <FontIcon className="material-icons" color={powerOn ? red500 : grey50}>
+                power_settings_new
+              </FontIcon>
+            </IconButton>
           </Col>
         </Row>
       </Grid>
     );
-    return play ? playMode : customMode;
+    return powerOn ? powerOnMode : customMode;
   }
 }
 
@@ -589,13 +588,13 @@ const mapStateToProps = createStructuredSelector({
   items2: selectItems2(),
   leftDrawer: selectLeftDrawer(),
   rightDrawer: selectRightDrawer(),
-  play: selectPlay(),
+  powerOn: selectPowerOn(),
+  socket: selectSocket(),
+
   ip: selectIP(),
   port: selectPort(),
   protocol: selectProtocol(),
-  patientMonitor: selectPatientMonitor(),
-  powerOn: selectPowerOn(),
-  socket: selectSocket()
+  patientMonitor: selectPatientMonitor()
 });
 
 function mapDispatchToProps(dispatch) {
@@ -610,8 +609,7 @@ function mapDispatchToProps(dispatch) {
     onAddItem2: () => dispatch(addItem2()),
     onRemoveItem2: (i) => dispatch(removeItem2(i)),
 
-    onPlayMode: () => dispatch(playMode()),
-    onPlayModeKeyUp: (e) => e.keyCode === 27 ? dispatch(playMode()) : null,
+    onPowerOnModeKeyUp: (e) => e.keyCode === 27 ? dispatch(handlePowerButtonToggle()) : null,
 
     handleLeftDrawerToggle: (i) => dispatch(handleLeftDrawerToggle(i)),
     handleLeftDrawerClose: () => dispatch(handleLeftDrawerClose()),

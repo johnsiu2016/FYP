@@ -117,12 +117,6 @@ export function removeItem2(i) {
   };
 }
 
-export function playMode() {
-  return {
-    type: PLAY_MODE,
-  };
-}
-
 export function handleLeftDrawerToggle(i) {
   return {
     type: HANDLE_LEFT_DRAWER_TOGGLE,
